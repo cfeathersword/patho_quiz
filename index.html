@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pathophysiology Practice Exam</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff; --bg2: #f5f5f3; --bg3: #eeede9;
+    --text: #1a1a18; --text2: #5a5a56; --text3: #999994;
+    --border: rgba(0,0,0,0.12); --border2: rgba(0,0,0,0.22);
+    --blue-bg: #e6f1fb; --blue-text: #185fa5; --blue-border: #b5d4f4;
+    --green-bg: #eaf3de; --green-text: #3b6d11; --green-border: #c0dd97;
+    --amber-bg: #faeeda; --amber-text: #854f0b; --amber-border: #fac775;
+    --correct-bg: #eaf3de; --correct-border: #639922; --correct-text: #27500a;
+    --wrong-bg: #fcebeb; --wrong-border: #a32d2d; --wrong-text: #501313;
+    --accent: #1D9E75;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a; --bg2: #242422; --bg3: #2e2e2b;
+      --text: #f0ede6; --text2: #aaa89f; --text3: #6b6965;
+      --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.2);
+      --blue-bg: #042c53; --blue-text: #85b7eb; --blue-border: #185fa5;
+      --green-bg: #173404; --green-text: #97c459; --green-border: #3b6d11;
+      --amber-bg: #412402; --amber-text: #fac775; --amber-border: #854f0b;
+      --correct-bg: #173404; --correct-border: #639922; --correct-text: #c0dd97;
+      --wrong-bg: #501313; --wrong-border: #a32d2d; --wrong-text: #f09595;
+    }
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg3); color: var(--text); min-height: 100vh; padding: 1rem; }
+  .container { max-width: 720px; margin: 0 auto; }
+  header { text-align: center; padding: 2rem 0 1.5rem; }
+  header h1 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  header p { font-size: 14px; color: var(--text2); }
+  .card { background: var(--bg); border: 0.5px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; }
+  .topic-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.25rem; }
+  .topic-btn { font-size: 12px; padding: 6px 14px; border: 0.5px solid var(--border2); border-radius: 20px; background: var(--bg); color: var(--text2); cursor: pointer; transition: all 0.15s; font-family: inherit; }
+  .topic-btn:hover { background: var(--bg2); }
+  .topic-btn.active { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue-border); font-weight: 500; }
+  .score-bar { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 1rem; min-height: 24px; }
+  .score-pill { font-size: 13px; color: var(--text2); }
+  .score-pill span { font-weight: 600; color: var(--text); }
+  .progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 1.5rem; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.4s ease; }
+  .q-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+  .q-num { font-size: 12px; color: var(--text3); }
+  .q-type { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.03em; }
+  .type-MCQ { background: var(--blue-bg); color: var(--blue-text); }
+  .type-SAQ { background: var(--green-bg); color: var(--green-text); }
+  .type-LAQ { background: var(--amber-bg); color: var(--amber-text); }
+  .question { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: 1.25rem; line-height: 1.65; }
+  .options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.25rem; }
+  .opt { padding: 11px 14px; border: 0.5px solid var(--border); border-radius: 10px; cursor: pointer; font-size: 14px; color: var(--text); background: var(--bg); transition: all 0.15s; text-align: left; font-family: inherit; line-height: 1.5; }
+  .opt:hover:not(:disabled) { background: var(--bg2); border-color: var(--border2); }
+  .opt.correct { background: var(--correct-bg); border-color: var(--correct-border); color: var(--correct-text); font-weight: 500; }
+  .opt.wrong { background: var(--wrong-bg); border-color: var(--wrong-border); color: var(--wrong-text); }
+  .opt:disabled { cursor: default; }
+  .answer-box { background: var(--bg2); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 14px 16px; font-size: 14px; color: var(--text); line-height: 1.75; margin-bottom: 1.25rem; display: none; }
+  .answer-box.show { display: block; }
+  .answer-box strong { color: var(--accent); display: block; margin-bottom: 6px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn { padding: 9px 20px; border: 0.5px solid var(--border2); border-radius: 10px; background: var(--bg); color: var(--text); cursor: pointer; font-size: 13px; font-family: inherit; transition: all 0.15s; }
+  .btn:hover { background: var(--bg2); }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue-border); font-weight: 500; }
+  .hint { font-size: 12px; color: var(--text3); margin-top: 10px; }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 1.25rem; }
+  .stat-card { background: var(--bg2); border-radius: 10px; padding: 12px 14px; text-align: center; }
+  .stat-card .label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .stat-card .value { font-size: 22px; font-weight: 600; color: var(--text); }
+  .topic-tag { font-size: 11px; padding: 2px 8px; border-radius: 20px; background: var(--bg3); color: var(--text3); display: inline-block; margin-bottom: 8px; }
+  .section-label { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .filter-row { display: flex; align-items: center; gap: 8px; margin-bottom: 1.25rem; flex-wrap: wrap; }
+  .filter-divider { width: 1px; height: 20px; background: var(--border2); flex-shrink: 0; }
+  .type-btn { font-size: 12px; font-weight: 600; padding: 6px 16px; border-radius: 20px; cursor: pointer; transition: all 0.15s; font-family: inherit; letter-spacing: 0.02em; border: 1.5px solid transparent; }
+  .type-btn-all  { background: var(--bg); color: var(--text2); border-color: var(--border2); }
+  .type-btn-all.active  { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .type-btn-MCQ  { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue-border); opacity: 0.55; }
+  .type-btn-MCQ.active  { opacity: 1; box-shadow: 0 0 0 2px var(--blue-border); }
+  .type-btn-SAQ  { background: var(--green-bg); color: var(--green-text); border-color: var(--green-border); opacity: 0.55; }
+  .type-btn-SAQ.active  { opacity: 1; box-shadow: 0 0 0 2px var(--green-border); }
+  .type-btn-LAQ  { background: var(--amber-bg); color: var(--amber-text); border-color: var(--amber-border); opacity: 0.55; }
+  .type-btn-LAQ.active  { opacity: 1; box-shadow: 0 0 0 2px var(--amber-border); }
+  footer { text-align: center; padding: 2rem 0 1rem; font-size: 12px; color: var(--text3); }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Pathophysiology Practice Exam</h1>
+    <p>MCQ · Short Answer · Long Answer — all topics</p>
+  </header>
+
+  <div class="card">
+    <div class="section-label">Filter by topic</div>
+    <div class="topic-nav" id="topicNav"></div>
+
+    <div class="filter-row">
+      <div class="section-label" style="margin-bottom:0;white-space:nowrap">Question type</div>
+      <div class="filter-divider"></div>
+      <button class="type-btn type-btn-all active" id="typeAll" onclick="setType('All')">All</button>
+      <button class="type-btn type-btn-MCQ" id="typeMCQ" onclick="setType('MCQ')">MCQ · 151</button>
+      <button class="type-btn type-btn-SAQ" id="typeSAQ" onclick="setType('SAQ')">SAQ · 42</button>
+      <button class="type-btn type-btn-LAQ" id="typeLAQ" onclick="setType('LAQ')">LAQ · 13</button>
+    </div>
+
+    <div class="stats-grid" id="statsGrid" style="display:none"></div>
+    <div class="score-bar" id="scoreBar"></div>
+    <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+
+    <div class="q-meta">
+      <span class="q-num" id="qNum"></span>
+      <span class="q-type" id="qType"></span>
+    </div>
+    <div class="topic-tag" id="qTopic"></div>
+    <div class="question" id="qText"></div>
+    <div class="options" id="opts"></div>
+    <div class="answer-box" id="answerBox"></div>
+    <div class="btn-row">
+      <button class="btn" id="revealBtn" onclick="reveal()">Show answer</button>
+      <button class="btn btn-primary" onclick="next()">Next question →</button>
+      <button class="btn" onclick="shuffle()">Shuffle</button>
+      <button class="btn" onclick="resetStats()">Reset score</button>
+    </div>
+    <p class="hint" id="hint"></p>
+  </div>
+
+  <footer>Offline quiz — all content from your Pathophysiology lecture slides.</footer>
+</div>
+
+<script>
+const QUESTIONS = [
+  // ── INFLAMMATION & HEALING ──
+  {topic:"Inflammation & Healing", type:"MCQ",
+   q:"Which of the following is NOT a cardinal sign of inflammation?",
+   opts:["Heat (calor)","Redness (rubor)","Cyanosis","Pain (dolor)"], ans:2,
+   explain:"The four cardinal signs of inflammation are heat (calor), redness (rubor), swelling (tumour), and pain (dolor). A fifth is loss of function. Cyanosis is a sign of tissue hypoxia, not inflammation."},
+
+  {topic:"Inflammation & Healing", type:"MCQ",
+   q:"Which inflammatory mediator is an anaphylatoxin?",
+   opts:["Bradykinin","IL-6","C5a","Serotonin"], ans:2,
+   explain:"C3a and C5a are complement-derived anaphylatoxins that trigger mast cell degranulation, vasodilation, and increased vascular permeability."},
+
+  {topic:"Inflammation & Healing", type:"MCQ",
+   q:"IL-6 induces synthesis of all of the following EXCEPT:",
+   opts:["CRP","Fibrinogen","Albumin","Hepcidin"], ans:2,
+   explain:"IL-6 induces CRP, serum amyloid A, fibrinogen, and hepcidin (acute phase proteins) but INHIBITS production of albumin."},
+
+  {topic:"Inflammation & Healing", type:"MCQ",
+   q:"Which cells are predominant in chronic inflammation?",
+   opts:["Neutrophils and mast cells","Macrophages and lymphocytes","Eosinophils and basophils","Platelets and erythrocytes"], ans:1,
+   explain:"Chronic inflammation is characterised by infiltration of macrophages and lymphocytes, fibrosis, and granuloma formation, in contrast to the neutrophil-dominated acute phase."},
+
+  {topic:"Inflammation & Healing", type:"SAQ",
+   q:"Describe the two phases of the acute inflammatory response.",
+   opts:null, ans:null,
+   explain:"Phase 1 – Vascular phase: vasodilation and increased capillary permeability cause heat, redness, and swelling. Histamine and serotonin are key early mediators. Phase 2 – Cellular phase: leukocyte migration (margination → rolling → adhesion → chemotaxis) from vessels into tissues, causing pain and facilitating phagocytosis."},
+
+  {topic:"Inflammation & Healing", type:"SAQ",
+   q:"Distinguish between acute and chronic inflammation in terms of duration, predominant cell type, and outcomes.",
+   opts:null, ans:null,
+   explain:"Acute: immediate/early response (minutes–days), neutrophil-dominant, vascular phase prominent, may resolve or progress. Chronic: weeks–years, macrophage and lymphocyte infiltration, fibrosis, associated with autoimmune disease and metabolic disorders. Chronic may arise from recurrent acute episodes or from persistent stimuli."},
+
+  {topic:"Inflammation & Healing", type:"SAQ",
+   q:"Differentiate between a keloid scar and a hypertrophic scar.",
+   opts:null, ans:null,
+   explain:"Hypertrophic scar: raised scar that stays within the wound boundaries, may regress over time, occurs due to excessive collagen deposition during healing. Keloid: scar that extends beyond original wound margins into normal tissue, does not regress, contains thick irregular collagen bundles, more common in darker skin types."},
+
+  {topic:"Inflammation & Healing", type:"LAQ",
+   q:"Explain the full pathway of inflammation from trigger to resolution or chronic disease, including key cellular events and mediators.",
+   opts:null, ans:null,
+   explain:"Trigger (immunological, humoral, biomechanical, physical) → Cell response: calcium entry, receptor activation, upregulation of pro-inflammatory genes, downregulation of anti-inflammatory genes, release of mediators (histamine, serotonin, bradykinin, C3a/C5a, PGE-2, LTB-4, PAF, IL-1, IL-6), expression of adhesion molecules → Microvascular consequences: enhanced endothelial permeability, leukocyte entrapment/rolling/adhesion/migration (chemotaxis), monocyte/T-lymphocyte infiltration, thrombosis, apoptosis, organ dysfunction → Either: Resolution (growth factor synthesis, angiogenesis, scar/tissue remodelling) OR Non-resolved chronic inflammation → disease (autoimmune disorders, metabolic disease)."},
+
+  // ── CNS ──
+  {topic:"CNS Disorders", type:"MCQ",
+   q:"Which pathological hallmarks are characteristic of Alzheimer's disease?",
+   opts:["Lewy bodies and dopamine loss","Neurofibrillary tangles and β-amyloid plaques","Demyelination and gliosis","Prion aggregates and cortical thinning"], ans:1,
+   explain:"Alzheimer's is defined by intracellular neurofibrillary tangles (from altered tau protein) and extracellular β-amyloid (senile) plaques, leading to neuronal loss and cortical atrophy."},
+
+  {topic:"CNS Disorders", type:"MCQ",
+   q:"In Parkinson's disease, which pathway degenerates to produce motor deficits?",
+   opts:["Corticospinal tract","Nigrostriatal pathway","Spinocerebellar tract","Limbic pathway"], ans:1,
+   explain:"Loss of dopamine-producing neurons in the substantia nigra leads to degeneration of the nigrostriatal pathway, causing the cardinal features: tremor, rigidity, bradykinesia, and postural instability."},
+
+  {topic:"CNS Disorders", type:"MCQ",
+   q:"An absence seizure typically lasts:",
+   opts:["30–60 seconds","1–5 minutes","5–10 seconds","10–15 seconds"], ans:2,
+   explain:"Absence seizures last approximately 5–10 seconds, characterised by cessation of activity and loss of awareness without falling."},
+
+  {topic:"CNS Disorders", type:"MCQ",
+   q:"Which type of dementia is associated with prion particles and is rapidly fatal after symptoms appear?",
+   opts:["Vascular dementia","Alcohol-related dementia","Creutzfeldt-Jakob dementia","Fronto-temporal lobar degeneration"], ans:2,
+   explain:"Creutzfeldt-Jakob disease is caused by prion particles. It presents with dementia, behavioural and motor changes, and death occurs soon after symptoms become apparent."},
+
+  {topic:"CNS Disorders", type:"SAQ",
+   q:"List four cardinal signs of Parkinson's disease and name two neurotransmitters impaired.",
+   opts:null, ans:null,
+   explain:"Cardinal signs: (1) Resting tremor, (2) Rigidity (lead-pipe/cogwheel), (3) Bradykinesia (slowness of movement), (4) Postural instability. Impaired neurotransmitters: Dopamine (reduced — primary deficit) and Acetylcholine (imbalanced relative to dopamine loss)."},
+
+  {topic:"CNS Disorders", type:"SAQ",
+   q:"Differentiate between ischaemic and haemorrhagic stroke, and define a transient ischaemic attack (TIA).",
+   opts:null, ans:null,
+   explain:"Ischaemic stroke: occlusion of a cerebral artery (thrombus or embolus) causing infarction; treated with thrombolytics (if within window) and antiplatelets. Haemorrhagic stroke: rupture of a cerebral vessel causing bleeding into brain tissue; thrombolytics are contraindicated; managed surgically and supportively. TIA: transient episode of neurological dysfunction from focal brain ischaemia, resolving within 24 hours (usually minutes), with no permanent infarction — a major warning sign of impending stroke."},
+
+  {topic:"CNS Disorders", type:"SAQ",
+   q:"List five risk factors for Alzheimer's disease.",
+   opts:null, ans:null,
+   explain:"(1) Advanced age, (2) Family history/genetic factors (e.g. APOE-ε4), (3) Female sex, (4) History of head trauma, (5) Cardiovascular risk factors (hypertension, diabetes, obesity), (6) Low educational attainment, (7) Depression."},
+
+  {topic:"CNS Disorders", type:"LAQ",
+   q:"Describe the pathophysiology of Alzheimer's disease including intracellular and extracellular changes, stages of clinical progression, and management.",
+   opts:null, ans:null,
+   explain:"Intracellular: altered tau protein → microtubule collapse → neurofibrillary tangles. Extracellular: secretases cleave amyloid precursor protein (APP) → β-amyloid fragments aggregate → senile (β-amyloid) plaques. Both pathways → oxidative stress, overstimulation of NMDA receptors (excitotoxicity), cholinergic dysfunction, neuronal loss, cortical atrophy, and neuroinflammation. Clinical stages: Mild — confusion, memory loss, depression, personality changes (managed with SSRIs, memory aids, NMDA antagonists, cholinesterase inhibitors). Moderate — ↓attention span, dyspraxia, incontinence, behavioural issues (managed with assisted care, continence aids, psychotropic agents). Severe — total dependence, vegetative state (total care). Alzheimer's represents 50–70% of all dementias."},
+
+  // ── CARDIOVASCULAR ──
+  {topic:"Cardiovascular System", type:"MCQ",
+   q:"Ischaemic heart disease is primarily defined as:",
+   opts:["Infection of the myocardium","Inadequate oxygen supply to the heart","Valve regurgitation","Arrhythmia reducing cardiac output"], ans:1,
+   explain:"IHD is caused by inadequate oxygen supply to the myocardium, most commonly due to atherosclerotic narrowing of coronary arteries."},
+
+  {topic:"Cardiovascular System", type:"MCQ",
+   q:"Which stage of plaque development involves foam cell formation and smooth muscle migration?",
+   opts:["Endothelial cell injury","Migration of inflammatory cells","Lipid accumulation and smooth muscle proliferation","Fibrous cap formation"], ans:2,
+   explain:"Stage 3 involves lipid (LDL) accumulation, foam cell formation (macrophages engulfing LDL), release of toxic oxygen species, and smooth muscle migration — the core of atherogenesis."},
+
+  {topic:"Cardiovascular System", type:"MCQ",
+   q:"Left heart failure primarily causes:",
+   opts:["Dependent oedema and liver congestion","Pulmonary oedema and decreased cardiac output","GI distress and ascites","Anorexia and weight loss"], ans:1,
+   explain:"Left ventricular failure → pulmonary congestion → pulmonary oedema, orthopnoea, paroxysmal nocturnal dyspnoea, impaired gas exchange, and cyanosis."},
+
+  {topic:"Cardiovascular System", type:"MCQ",
+   q:"Which of the following is a modifiable risk factor for hypertension?",
+   opts:["Age","Family history","Obesity","Sex"], ans:2,
+   explain:"Obesity is a modifiable risk factor. Age, family history, and sex (male) are non-modifiable risk factors for hypertension."},
+
+  {topic:"Cardiovascular System", type:"SAQ",
+   q:"Define atherosclerosis. List five major risk factors.",
+   opts:null, ans:null,
+   explain:"Atherosclerosis is progressive thickening and hardening of arterial walls due to lipid-laden plaque (atheroma) formation within the intima. Risk factors: (1) Hypercholesterolaemia/elevated LDL, (2) Hypertension, (3) Smoking, (4) Diabetes/metabolic disorders, (5) Ageing, (6) Family history, (7) Obesity, (8) Inflammation, (9) Oxidative stress."},
+
+  {topic:"Cardiovascular System", type:"SAQ",
+   q:"List the differences between right and left heart failure.",
+   opts:null, ans:null,
+   explain:"Right heart failure: congestion of peripheral tissues → dependent oedema and ascites, liver congestion (signs of impaired liver function), GI tract congestion (anorexia, GI distress, weight loss). Left heart failure: decreased cardiac output (activity intolerance, signs of decreased tissue perfusion) and pulmonary congestion → impaired gas exchange (cyanosis, hypoxia), pulmonary oedema (cough with frothy sputum, orthopnoea, paroxysmal nocturnal dyspnoea)."},
+
+  {topic:"Cardiovascular System", type:"SAQ",
+   q:"Name three types of angina and list five precipitating factors.",
+   opts:null, ans:null,
+   explain:"Types: (1) Stable angina – predictable, brought on by exertion, relieved by rest. (2) Unstable angina – unpredictable, occurs at rest, sign of impending MI. (3) Variant (Prinzmetal's) angina – caused by coronary artery spasm. Precipitating factors: physical exertion, emotional stress, cold weather, heavy meals, smoking, anaemia, tachycardia."},
+
+  {topic:"Cardiovascular System", type:"LAQ",
+   q:"Describe the pathophysiology, clinical evaluation, and management of STEMI.",
+   opts:null, ans:null,
+   explain:"Pathophysiology: atherosclerotic plaque rupture → platelet aggregation and thrombus formation → complete coronary artery occlusion → full-thickness myocardial ischaemia → necrosis. STEMI (ST-Elevation MI) involves transmural infarction distinguishable from NSTEMI (partial thickness, no persistent ST elevation). Evaluation: (1) ECG – ST elevation, Q waves; (2) Troponin I/T – gold standard biomarker; (3) CK-MB – less specific; (4) Echocardiography – assess wall motion; (5) Coronary angiography – definitive anatomy. Management: Reperfusion – primary PCI (preferred, within 90 min) or thrombolytics (if PCI unavailable). Pharmacological: dual antiplatelet therapy (aspirin + clopidogrel/ticagrelor), anticoagulants (heparin), beta-blockers, ACE inhibitors, statins, nitrates. Complications to monitor: arrhythmia, cardiogenic shock, heart failure, pericarditis."},
+
+  // ── RENAL ──
+  {topic:"Renal System", type:"MCQ",
+   q:"Which measure is considered the best indicator of kidney function?",
+   opts:["Serum creatinine","Blood urea nitrogen","Glomerular filtration rate (GFR)","Urine protein levels"], ans:2,
+   explain:"GFR is considered the best single measure of kidney function. It reflects the rate of filtration by all nephrons and is used to stage CKD."},
+
+  {topic:"Renal System", type:"MCQ",
+   q:"Why are females more susceptible to urinary tract infections than males?",
+   opts:["Higher urinary pH in females","Shorter female urethra anatomically closer to perianal flora","Females produce less IgA","Female kidneys have fewer nephrons"], ans:1,
+   explain:"The female urethra is significantly shorter (~4 cm vs ~20 cm in males) and is anatomically close to the anus, facilitating bacterial ascent to the bladder."},
+
+  {topic:"Renal System", type:"MCQ",
+   q:"Struvite renal stones are most commonly caused by infection with:",
+   opts:["E. coli","Staphylococcus aureus","Proteus mirabilis","Klebsiella pneumoniae"], ans:2,
+   explain:"Proteus mirabilis produces urease, which splits urea into ammonia → raises urinary pH → promotes struvite (magnesium ammonium phosphate) crystal formation."},
+
+  {topic:"Renal System", type:"SAQ",
+   q:"Distinguish between acute kidney injury (AKI) and chronic kidney disease (CKD).",
+   opts:null, ans:null,
+   explain:"AKI: sudden onset, potentially reversible, caused by reduced blood flow (pre-renal), structural disruption (intrinsic), or urinary obstruction (post-renal). CKD: slow progressive decline, irreversible permanent nephron loss caused by long-standing conditions (diabetes, hypertension, glomerulonephritis). Both show ↓GFR and waste accumulation, but AKI may recover while CKD progresses to end-stage renal disease."},
+
+  {topic:"Renal System", type:"SAQ",
+   q:"Name five types of renal calculi and their associated cause.",
+   opts:null, ans:null,
+   explain:"(1) Calcium oxalate – hypercalciuria and low urinary citrate. (2) Calcium phosphate – renal tubular acidification defects. (3) Uric acid – high-protein diet, uric acid supersaturation. (4) Struvite – bacterial infection (P. mirabilis, urease-producing). (5) Cystine – elevated urinary cystine (cystinuria, genetic disorder)."},
+
+  {topic:"Renal System", type:"LAQ",
+   q:"Explain the pathophysiology, signs and symptoms, investigations, and management of chronic kidney disease.",
+   opts:null, ans:null,
+   explain:"Pathophysiology: progressive nephron loss → ↓GFR → (1) sodium/water retention: hypertension, oedema, heart failure; (2) hyperkalemia: cardiac risk; (3) nitrogenous waste accumulation: uraemia, coagulopathies, bleeding; (4) ↓erythropoietin: anaemia; (5) acid–base imbalance: acidosis; (6) ↓vitamin D activation: hypocalcaemia → hyperparathyroidism → osteodystrophies; (7) phosphate retention: hypocalcaemia. Signs/symptoms: fatigue, oedema, hypertension, anaemia, pruritus (skin disorders), GI manifestations (nausea), neurological manifestations, sexual dysfunction, pericarditis. Investigations: GFR calculation, serum creatinine/urea/electrolytes, full blood count (anaemia), urinalysis, renal ultrasound, renal biopsy. Management: control hypertension (ACE inhibitors/ARBs), glycaemic control, dietary protein and potassium restriction, treat anaemia (erythropoiesis-stimulating agents), phosphate binders, sodium bicarbonate for acidosis, dialysis (haemodialysis or peritoneal) for end-stage, renal transplantation."},
+
+  // ── NEOPLASIA / BLOOD ──
+  {topic:"Cancer & Blood", type:"MCQ",
+   q:"Which feature best distinguishes a malignant from a benign neoplasm?",
+   opts:["Rapid growth rate","Encapsulation","Ability to metastasise","Well-differentiated cells"], ans:2,
+   explain:"Metastasis — the ability to invade surrounding tissues and spread via blood/lymph to distant sites — is the defining feature of malignancy. Benign tumours do not metastasise."},
+
+  {topic:"Cancer & Blood", type:"MCQ",
+   q:"In carcinogenesis, what immediately follows failure of DNA repair?",
+   opts:["Immediate cell death","Activation of oncogenes and inactivation of tumour suppressor genes","Conversion to benign neoplasm","Immune clearance"], ans:1,
+   explain:"Failed DNA repair → activation of growth-promoting oncogenes + inactivation of tumour suppressor genes + alterations in apoptosis-controlling genes → unregulated cell differentiation → malignant neoplasm."},
+
+  {topic:"Cancer & Blood", type:"SAQ",
+   q:"Differentiate between iron deficiency anaemia and pernicious (megaloblastic) anaemia.",
+   opts:null, ans:null,
+   explain:"Iron deficiency anaemia: microcytic, hypochromic RBCs; ↓serum iron, ↓ferritin, ↑TIBC; caused by poor dietary intake, chronic blood loss, or malabsorption; treated with oral/IV iron. Pernicious anaemia: macrocytic (megaloblastic) RBCs; caused by B12 deficiency from autoimmune destruction of gastric parietal cells (loss of intrinsic factor); neurological symptoms (subacute combined degeneration of spinal cord); treated with B12 injections/supplementation."},
+
+  {topic:"Cancer & Blood", type:"SAQ",
+   q:"Describe eight factors that can cause cancer.",
+   opts:null, ans:null,
+   explain:"(1) Chemical carcinogens (e.g. tobacco smoke, asbestos). (2) Radiation (UV, ionising). (3) Viral infections (HPV, EBV, HBV, HCV). (4) Genetic mutations/inherited syndromes (BRCA1/2, Li-Fraumeni). (5) Chronic inflammation. (6) Hormonal factors (oestrogen exposure). (7) Immunosuppression. (8) Dietary factors (high-fat diet, processed meat, low fibre)."},
+
+  // ── RESPIRATORY ──
+  {topic:"Respiratory System", type:"MCQ",
+   q:"COVID-19 (SARS-CoV-2) binds to which receptor to enter human cells?",
+   opts:["CD4 receptor","ACE2 receptor","TLR-4","CXCR4"], ans:1,
+   explain:"SARS-CoV-2 uses its spike protein to bind the ACE2 (angiotensin-converting enzyme 2) receptor, which is highly expressed in the lungs, heart, kidneys, and gut."},
+
+  {topic:"Respiratory System", type:"MCQ",
+   q:"Which classification of pneumonia describes infection acquired in a hospitalised patient after 48 hours of admission?",
+   opts:["Community-acquired pneumonia","Ventilator-acquired pneumonia","Hospital-acquired pneumonia","Aspiration pneumonia"], ans:2,
+   explain:"Hospital-acquired (nosocomial) pneumonia develops 48+ hours after hospital admission. Ventilator-acquired pneumonia is a subtype occurring in mechanically ventilated patients."},
+
+  {topic:"Respiratory System", type:"MCQ",
+   q:"What is the primary gene affected in cystic fibrosis?",
+   opts:["CFTR (cystic fibrosis transmembrane conductance regulator)","BRCA1","PTEN","TP53"], ans:0,
+   explain:"Cystic fibrosis is caused by mutations in the CFTR gene, leading to defective chloride channel function, thick mucus secretions, and progressive lung damage."},
+
+  {topic:"Respiratory System", type:"SAQ",
+   q:"Differentiate between obstructive lung disease (OLD) and restrictive lung disease (RLD).",
+   opts:null, ans:null,
+   explain:"Obstructive lung disease: airflow obstruction due to airway narrowing or collapse (e.g. asthma, COPD, cystic fibrosis); ↓FEV1/FVC ratio; air trapping → hyperinflation. Restrictive lung disease: reduced lung volume due to stiff lungs or chest wall restriction (e.g. ARDS, fibrosis, sarcoidosis); ↓FVC with normal or increased FEV1/FVC ratio; ↓total lung capacity."},
+
+  {topic:"Respiratory System", type:"SAQ",
+   q:"List the trigger factors for asthma and outline the pathophysiology.",
+   opts:null, ans:null,
+   explain:"Triggers: allergens (pollen, dust mites, pet dander), cold air, exercise, smoke/pollutants, respiratory infections, stress, NSAIDs. Pathophysiology: allergen exposure → IgE-mediated mast cell degranulation → histamine, leukotrienes, prostaglandins release → bronchoconstriction, mucosal oedema, increased mucus secretion → airway narrowing → wheeze, dyspnoea, cough. Chronic inflammation leads to airway remodelling."},
+
+  {topic:"Respiratory System", type:"LAQ",
+   q:"Describe the causes, pathophysiology, evaluation, and treatment of community-acquired pneumonia.",
+   opts:null, ans:null,
+   explain:"Causes: bacterial (Streptococcus pneumoniae most common, Haemophilus influenzae, Mycoplasma), viral (influenza, SARS-CoV-2), fungal (Pneumocystis jirovecii in immunocompromised). Classification by anatomy: lobar (whole lobe consolidation) vs bronchopneumonia (patchy, multifocal). Pathophysiology: pathogen reaches alveoli → inflammatory response → exudate fills alveoli → impaired gas exchange → hypoxia. Evaluation: chest X-ray (consolidation), sputum culture (colour indicates pathogen — green/yellow = bacterial, rust-coloured = pneumococcal), full blood count (↑WCC), CRP, oxygen saturation, blood cultures. Treatment: antibiotics (amoxicillin for mild CAP, co-amoxiclav/clarithromycin for moderate, IV antibiotics for severe), supportive (oxygen, fluids, analgesia), antivirals for viral pneumonia."},
+
+  // ── GASTROINTESTINAL ──
+  {topic:"Gastrointestinal System", type:"MCQ",
+   q:"Which pathogen is most commonly associated with peptic ulcer disease (PUD)?",
+   opts:["Clostridium difficile","Helicobacter pylori","Campylobacter jejuni","Salmonella typhi"], ans:1,
+   explain:"H. pylori colonises the gastric mucosa, produces urease (raising local pH), damages the mucous barrier, and triggers inflammation leading to peptic ulceration."},
+
+  {topic:"Gastrointestinal System", type:"MCQ",
+   q:"Which protein triggers the immune response in coeliac disease?",
+   opts:["Casein","Lactulose","Gluten (gliadin)","Fructose"], ans:2,
+   explain:"Coeliac disease is an autoimmune condition triggered by gluten (specifically its gliadin component) in genetically susceptible individuals, causing villous atrophy of the small intestine."},
+
+  {topic:"Gastrointestinal System", type:"MCQ",
+   q:"Acute pancreatitis is characterised histologically by:",
+   opts:["Fibrosis and calcification","Haemorrhage, oedema, and necrosis","Granuloma formation","Lymphocytic infiltration only"], ans:1,
+   explain:"Acute pancreatitis shows haemorrhage, oedema, and fat/acinar cell necrosis. Chronic pancreatitis (commonly from alcohol abuse) shows fibrosis and calcification."},
+
+  {topic:"Gastrointestinal System", type:"SAQ",
+   q:"Describe the causes, complications, and management of GERD.",
+   opts:null, ans:null,
+   explain:"Causes: incompetent lower oesophageal sphincter (LOS), obesity, hiatus hernia, pregnancy, fatty/spicy foods, alcohol, smoking, lying flat after eating. Complications: oesophagitis, oesophageal stricture, Barrett's oesophagus (precancerous metaplasia), oesophageal adenocarcinoma. Management: lifestyle (weight loss, elevate head of bed, avoid triggers), antacids, H2 blockers (ranitidine), proton pump inhibitors (omeprazole — first line), surgical fundoplication for refractory cases."},
+
+  {topic:"Gastrointestinal System", type:"SAQ",
+   q:"Describe the pathogenesis, diagnosis, and management of H. pylori-associated peptic ulcer disease.",
+   opts:null, ans:null,
+   explain:"Pathogenesis: H. pylori produces urease → ammonia → mucosal damage; triggers local inflammation; disrupts mucus layer and stimulates acid secretion → ulceration. Diagnosis: urea breath test (non-invasive, gold standard), stool antigen test, serology (IgG), endoscopy with CLO test/biopsy. Management: triple therapy — PPI + clarithromycin + amoxicillin (or metronidazole) for 7–14 days. Test for eradication 4–6 weeks after treatment."},
+
+  {topic:"Gastrointestinal System", type:"LAQ",
+   q:"Explain the pathophysiology, signs and symptoms, investigations, and management of cirrhosis.",
+   opts:null, ans:null,
+   explain:"Causes: chronic viral hepatitis (HBV, HCV), alcohol abuse, NAFLD, autoimmune hepatitis. Pathophysiology: repeated hepatocyte injury → inflammation → stellate cell activation → fibrosis → disruption of normal liver architecture with regenerative nodules → portal hypertension. Histology: progressive stages — steatosis → hepatitis → fibrosis → cirrhosis → hepatocellular carcinoma. Signs/symptoms: fatigue, jaundice, ascites, oedema, spider naevi, palmar erythema, gynaecomastia, hepatic encephalopathy, coagulopathy. Investigations: LFTs (↑AST/ALT/bilirubin, ↓albumin), coagulation studies (↑PT), FBC, liver ultrasound, fibroscan (elastography), liver biopsy. Management: treat underlying cause (antivirals, alcohol cessation), low-sodium diet, diuretics (spironolactone + furosemide) for ascites, beta-blockers for portal hypertension, lactulose for encephalopathy, liver transplantation for end-stage disease."},
+
+  // ── ENDOCRINE ──
+  {topic:"Endocrine System", type:"MCQ",
+   q:"In hyperthyroidism (thyrotoxicosis), what happens to TSH levels?",
+   opts:["TSH increases","TSH decreases","TSH remains unchanged","TSH fluctuates"], ans:1,
+   explain:"In hyperthyroidism, excess thyroid hormone causes negative feedback → suppressed TSH from the pituitary. Low TSH + elevated T3/T4 is the diagnostic hallmark."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"Cushing's syndrome is characterised by excess of which hormone?",
+   opts:["Aldosterone","Cortisol","ACTH only","Insulin"], ans:1,
+   explain:"Cushing's syndrome results from prolonged excess cortisol — from endogenous causes (pituitary adenoma secreting ACTH, adrenal tumour) or exogenous corticosteroid therapy."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"The 5Hs associated with pheochromocytoma include all EXCEPT:",
+   opts:["Hypertension","Headache","Hypoglycaemia","Hyperhidrosis"], ans:2,
+   explain:"The 5Hs of phaeochromocytoma are Hypertension, Headache, Hyperhidrosis (sweating), Heart palpitations, and Hypermetabolism. Hypoglycaemia is not a feature (rather, hyperglycaemia may occur)."},
+
+  {topic:"Endocrine System", type:"SAQ",
+   q:"Differentiate between Type 1 and Type 2 diabetes mellitus.",
+   opts:null, ans:null,
+   explain:"Type 1 DM: autoimmune destruction of pancreatic β-cells → absolute insulin deficiency; onset typically in childhood/young adults; requires insulin; prone to diabetic ketoacidosis (DKA). Type 2 DM: insulin resistance with relative insulin deficiency; associated with obesity, sedentary lifestyle, older age; managed with lifestyle modification, oral hypoglycaemics (metformin first line), and eventually insulin; prone to hyperosmolar hyperglycaemic state (HHS)."},
+
+  {topic:"Endocrine System", type:"SAQ",
+   q:"Describe the causes, clinical features, and diagnosis of Cushing's syndrome.",
+   opts:null, ans:null,
+   explain:"Causes: pituitary ACTH-secreting adenoma (Cushing's disease), adrenal cortisol-secreting tumour, ectopic ACTH production (lung cancer), or long-term exogenous corticosteroid therapy. Features: central obesity, moon face, buffalo hump, purple striae, thin skin, proximal muscle weakness, hypertension, hyperglycaemia, osteoporosis, immunosuppression. Diagnosis: 24-hour urinary free cortisol, overnight dexamethasone suppression test, late-night salivary cortisol; MRI pituitary/adrenal imaging; ACTH level to determine source."},
+
+  // ── REPRODUCTIVE ──
+  {topic:"Reproductive System", type:"MCQ",
+   q:"Polycystic ovarian syndrome (PCOS) is most commonly associated with:",
+   opts:["Low LH and high FSH","Insulin resistance and hyperandrogenism","Low oestrogen and high progesterone","Autoimmune thyroid disease only"], ans:1,
+   explain:"PCOS is characterised by insulin resistance (leading to hyperinsulinaemia), hyperandrogenism (elevated testosterone → hirsutism, acne, irregular periods), and polycystic ovaries on ultrasound."},
+
+  {topic:"Reproductive System", type:"MCQ",
+   q:"Which is the primary hormone driving uterine fibroid growth?",
+   opts:["Progesterone","Prolactin","Oestrogen","FSH"], ans:2,
+   explain:"Uterine fibroids (leiomyomas) are oestrogen-dependent — they grow during reproductive years and regress after menopause when oestrogen levels fall."},
+
+  {topic:"Reproductive System", type:"SAQ",
+   q:"Differentiate between primary and secondary dysmenorrhoea.",
+   opts:null, ans:null,
+   explain:"Primary dysmenorrhoea: painful menstruation without underlying pathology; caused by excess prostaglandin production → uterine contractions and ischaemia; treated with NSAIDs and OCP. Secondary dysmenorrhoea: painful menstruation due to an underlying pelvic condition (e.g. endometriosis, fibroids, adenomyosis, PID); usually worsens with age; treatment targets the underlying cause."},
+
+  {topic:"Reproductive System", type:"SAQ",
+   q:"Describe the pathological mechanism and clinical manifestations of endometriosis.",
+   opts:null, ans:null,
+   explain:"Pathological mechanism: retrograde menstruation deposits endometrial cells outside the uterus (ovaries, fallopian tubes, peritoneum, bowel) → ectopic implants respond to hormonal cycles → inflammation, scarring, adhesions, and cysts (endometriomas). Clinical manifestations: cyclical pelvic pain worsening around menstruation, dyspareunia (painful intercourse), dysmenorrhoea, subfertility/infertility, heavy menstrual bleeding, bowel/bladder symptoms (depending on location of implants)."},
+
+  // ── MALE REPRODUCTIVE ──
+  {topic:"Male Reproductive System", type:"MCQ",
+   q:"Which of the following best describes benign prostatic hyperplasia (BPH)?",
+   opts:["Malignant overgrowth of prostatic epithelium","Non-malignant enlargement of the prostate causing lower urinary tract symptoms","Bacterial infection of the prostate","Prostatic atrophy leading to incontinence"], ans:1,
+   explain:"BPH is a non-malignant (benign) proliferation of prostatic stromal and epithelial cells causing gland enlargement → compression of the urethra → LUTS (frequency, urgency, poor stream, nocturia, retention)."},
+
+  {topic:"Male Reproductive System", type:"MCQ",
+   q:"In prostate cancer, 5-DHT (dihydrotestosterone) plays which role?",
+   opts:["It inhibits prostate cell proliferation","It is converted from oestrogen","It drives androgen-dependent prostate cell growth","It is produced exclusively in the adrenal gland"], ans:2,
+   explain:"5-alpha-reductase converts testosterone to DHT (dihydrotestosterone) in prostate cells. DHT is a potent androgen that drives prostate cell proliferation — its role underpins androgen deprivation therapy in prostate cancer."},
+
+  {topic:"Male Reproductive System", type:"SAQ",
+   q:"Differentiate between varicocele, hydrocele, and spermatocele.",
+   opts:null, ans:null,
+   explain:"Varicocele: abnormal dilation of the pampiniform venous plexus within the scrotum (like varicose veins); associated with male subfertility; more common on the left side. Hydrocele: accumulation of serous fluid within the tunica vaginalis surrounding the testis; causes scrotal swelling; transilluminates on examination. Spermatocele: benign cystic mass in the epididymis containing spermatozoa; typically small, painless, and transilluminates; usually requires no treatment."},
+
+  // ── CNS (from study app) ──
+  {topic:"CNS Disorders", type:"MCQ",
+   q:"Which disorder is a warning sign for future stroke?",
+   opts:["TIA","Angina","DVT","Varicose veins"], ans:0,
+   explain:"A transient ischaemic attack (TIA) causes temporary neurological symptoms from focal brain ischaemia, resolving within 24 hours. It is a major warning sign of impending stroke and requires urgent investigation and management."},
+
+  {topic:"CNS Disorders", type:"MCQ",
+   q:"What protein forms the core of Lewy bodies in Parkinson's disease?",
+   opts:["Tau","Alpha-synuclein","Haemoglobin","Fibrin"], ans:1,
+   explain:"Lewy bodies — the pathological hallmark of Parkinson's disease — are intracytoplasmic inclusions composed primarily of alpha-synuclein protein aggregates found in dopaminergic neurons of the substantia nigra."},
+
+  {topic:"CNS Disorders", type:"MCQ",
+   q:"What does the acronym TRAP represent in Parkinson's disease?",
+   opts:["Tremor, Rigidity, Akinesia, Postural instability","Tension, Rest, Ataxia, Pain","Tachycardia, Rash, Anuria, Pallor","Thrombus, Rupture, Arrhythmia, Pressure"], ans:0,
+   explain:"TRAP summarises the four cardinal features of Parkinson's disease: Tremor (resting), Rigidity (lead-pipe/cogwheel), Akinesia/Bradykinesia (slowness), and Postural instability."},
+
+  {topic:"CNS Disorders", type:"MCQ",
+   q:"What is the hallmark lesion of Alzheimer's disease?",
+   opts:["Plaques and tangles","Thrombi","Aneurysms","Calcifications"], ans:0,
+   explain:"Alzheimer's is defined by two pathological hallmarks: extracellular β-amyloid (senile) plaques and intracellular neurofibrillary tangles (from hyperphosphorylated tau protein), both leading to neuronal loss and cortical atrophy."},
+
+  // ── CARDIOVASCULAR (from study app) ──
+  {topic:"Cardiovascular System", type:"MCQ",
+   q:"Which side of heart failure commonly causes pulmonary oedema?",
+   opts:["Left","Right","Both","Neither"], ans:0,
+   explain:"Left ventricular failure → reduced forward output → pulmonary venous congestion → pulmonary oedema, causing dyspnoea, orthopnoea, paroxysmal nocturnal dyspnoea, and impaired gas exchange."},
+
+  {topic:"Cardiovascular System", type:"MCQ",
+   q:"Which type of MI is associated with ST elevation on ECG?",
+   opts:["STEMI","NSTEMI","TIA","Angina"], ans:0,
+   explain:"STEMI (ST-Elevation Myocardial Infarction) results from complete coronary occlusion causing transmural (full-thickness) infarction. It is distinguished from NSTEMI (partial occlusion, no persistent ST elevation) and is managed with urgent primary PCI or thrombolysis."},
+
+  // ── RENAL (from study app) ──
+  {topic:"Renal System", type:"MCQ",
+   q:"Which renal condition is sudden in onset and often reversible?",
+   opts:["AKI","CKD","Renal calculi","Cystitis"], ans:0,
+   explain:"Acute kidney injury (AKI) is a sudden reduction in kidney function, potentially reversible, and classified as pre-renal (reduced blood flow), intrinsic (structural damage), or post-renal (obstruction). CKD is irreversible progressive nephron loss."},
+
+  // ── INFLAMMATION (from study app) ──
+  {topic:"Inflammation & Healing", type:"MCQ",
+   q:"What is the Latin term for redness in acute inflammation?",
+   opts:["Rubor","Calor","Tumor","Dolor"], ans:0,
+   explain:"The five cardinal signs of acute inflammation are: rubor (redness), calor (heat), tumor (swelling), dolor (pain), and loss of function. Rubor results from vasodilation and increased blood flow to the affected tissue."},
+
+  {topic:"Inflammation & Healing", type:"MCQ",
+   q:"Which phase of acute inflammation involves white cell migration to the injury site?",
+   opts:["Cellular phase","Vascular phase","Resolution phase","Fibrotic phase"], ans:0,
+   explain:"The cellular phase follows the initial vascular phase. It involves leukocyte margination, rolling, adhesion to endothelium, diapedesis (squeezing through vessel walls), and chemotaxis toward the site of injury."},
+
+  {topic:"Inflammation & Healing", type:"MCQ",
+   q:"What type of exudate contains pus with cell debris and microbes?",
+   opts:["Purulent","Serous","Fibrinous","Haemorrhagic"], ans:0,
+   explain:"Purulent (suppurative) exudate contains pus — a mixture of dead neutrophils, cell debris, and microorganisms. It is characteristic of bacterial infections causing pyogenic (pus-forming) inflammation."},
+
+  {topic:"Inflammation & Healing", type:"MCQ",
+   q:"Which exudate type is watery with low protein content?",
+   opts:["Serous","Fibrinous","Purulent","Haemorrhagic"], ans:0,
+   explain:"Serous exudate is watery, pale, and has a low protein content. It resembles serum and is typical of mild inflammation (e.g. early blister fluid). It indicates increased capillary permeability without significant cellular component."},
+
+  {topic:"Inflammation & Healing", type:"MCQ",
+   q:"What process allows white cells to squeeze through capillary walls?",
+   opts:["Diapedesis","Chemotaxis","Opsonisation","Phagocytosis"], ans:0,
+   explain:"Diapedesis (also called transmigration or extravasation) is the process by which leukocytes squeeze between endothelial cells to exit blood vessels and migrate into inflamed tissue. It follows rolling and firm adhesion mediated by selectins and integrins."},
+
+  {topic:"Inflammation & Healing", type:"MCQ",
+   q:"Which inflammatory mediator is released by mast cells and causes vasodilation?",
+   opts:["Histamine","Fibrin","Erythropoietin","Collagen"], ans:0,
+   explain:"Histamine is stored in mast cell granules and released immediately upon injury or immune activation. It causes vasodilation and increased vascular permeability, contributing to the early vascular phase of inflammation (heat and redness)."},
+
+  {topic:"Inflammation & Healing", type:"MCQ",
+   q:"How long must inflammation persist to be classified as chronic?",
+   opts:["Over two weeks","Over 48 hours","Over one week","Over one month"], ans:0,
+   explain:"Chronic inflammation is generally defined as inflammation persisting beyond two weeks. It is characterised by macrophage and lymphocyte infiltration, tissue destruction, and attempts at repair (fibrosis), in contrast to the neutrophil-dominant acute phase."},
+
+  {topic:"Inflammation & Healing", type:"MCQ",
+   q:"Which healing type involves significant tissue loss and prolonged healing time?",
+   opts:["Second intention","First intention","Direct closure","Fibrinous healing"], ans:0,
+   explain:"Healing by second intention occurs when wound edges cannot be approximated — there is significant tissue loss, resulting in prolonged granulation tissue formation, contraction, and scar formation. First intention (primary closure) applies to clean wounds with apposed edges."},
+
+  {topic:"Inflammation & Healing", type:"MCQ",
+   q:"Which drug class broadly suppresses inflammatory mediator production?",
+   opts:["Corticosteroids","Antihistamines","Anticoagulants","Analgesics"], ans:0,
+   explain:"Corticosteroids (e.g. prednisolone, dexamethasone) broadly suppress inflammation by inhibiting phospholipase A2 → reducing arachidonic acid production → fewer prostaglandins, leukotrienes, and thromboxanes. They also reduce cytokine production and leukocyte migration."},
+
+  // ── CANCER & BLOOD (from study app) ──
+  {topic:"Cancer & Blood", type:"MCQ",
+   q:"Approximately how many mutations are typically required for most cancers to develop?",
+   opts:["4–7","1–2","10–15","20+"], ans:0,
+   explain:"Carcinogenesis is a multi-step process. Most cancers require accumulation of 4–7 key mutations in oncogenes, tumour suppressor genes, and apoptosis-regulating genes before a fully malignant phenotype develops."},
+
+  {topic:"Cancer & Blood", type:"MCQ",
+   q:"What type of protein in cancer cells confers resistance to programmed cell death?",
+   opts:["Anti-apoptotic proteins","Fibrinogen","Histamine","Prostaglandins"], ans:0,
+   explain:"Cancer cells overexpress anti-apoptotic proteins (e.g. Bcl-2) and inactivate pro-apoptotic pathways (e.g. p53 mutations). This resistance to apoptosis allows tumour cells to survive despite DNA damage signals that would normally trigger cell death."},
+
+  {topic:"Cancer & Blood", type:"MCQ",
+   q:"Which anaemia is classified as microcytic and hypochromic?",
+   opts:["Iron-deficiency anaemia","Pernicious anaemia","Haemolytic anaemia","Aplastic anaemia"], ans:0,
+   explain:"Iron-deficiency anaemia produces small (microcytic) and pale (hypochromic) red blood cells due to insufficient haem synthesis. It is the most common anaemia worldwide, caused by poor dietary intake, chronic blood loss, or malabsorption."},
+
+  {topic:"Cancer & Blood", type:"MCQ",
+   q:"Which anaemia is classified as macrocytic and normochromic?",
+   opts:["Pernicious anaemia","Iron-deficiency anaemia","Sickle cell anaemia","Thalassaemia"], ans:0,
+   explain:"Pernicious anaemia (B12 deficiency) causes macrocytic (large), normochromic red blood cells due to impaired DNA synthesis — megaloblastic changes. It results from autoimmune destruction of gastric parietal cells → loss of intrinsic factor → B12 malabsorption."},
+
+  {topic:"Cancer & Blood", type:"MCQ",
+   q:"What globin chain is mutated in sickle cell anaemia?",
+   opts:["β-globin chain","α-globin chain","γ-globin chain","δ-globin chain"], ans:0,
+   explain:"Sickle cell anaemia is caused by a point mutation in the HBB gene encoding the β-globin chain — glutamate is replaced by valine. Under low oxygen, HbS polymerises → red cells adopt a rigid sickle shape → haemolysis and vaso-occlusion."},
+
+  {topic:"Cancer & Blood", type:"MCQ",
+   q:"Which haemophilia type is also known as Christmas disease?",
+   opts:["Haemophilia B","Haemophilia A","Haemophilia C","Von Willebrand disease"], ans:0,
+   explain:"Haemophilia B (Christmas disease) is an X-linked bleeding disorder caused by deficiency of clotting factor IX. Haemophilia A involves factor VIII deficiency. Both present with joint bleeds and prolonged bleeding after injury."},
+
+  {topic:"Cancer & Blood", type:"MCQ",
+   q:"What cells are the histological hallmark of Hodgkin lymphoma?",
+   opts:["Reed-Sternberg cells","Plasma cells","Mast cells","Neutrophils"], ans:0,
+   explain:"Reed-Sternberg cells are large, binucleated or multinucleated cells (owl-eye appearance) that are pathognomonic for Hodgkin lymphoma. They are derived from germinal centre B cells and are required for the histological diagnosis."},
+
+  {topic:"Cancer & Blood", type:"MCQ",
+   q:"What abnormal product do multiple myeloma cells produce in excess?",
+   opts:["Abnormal immunoglobulins (M proteins)","Excess erythrocytes","Deficient platelets","Excess fibrin"], ans:0,
+   explain:"Multiple myeloma is a malignant proliferation of plasma cells that produces monoclonal immunoglobulins (M proteins / paraproteins). These accumulate in blood and urine (Bence Jones proteins), causing bone marrow failure, renal damage, and immunodeficiency."},
+
+  {topic:"Cancer & Blood", type:"MCQ",
+   q:"What is polycythaemia?",
+   opts:["Overproduction of erythrocytes","Deficiency of platelets","Excess white cells","Reduced haemoglobin"], ans:0,
+   explain:"Polycythaemia (polycythaemia vera) is a myeloproliferative disorder characterised by overproduction of erythrocytes → increased blood viscosity → risk of thrombosis, stroke, and organ damage. It is associated with a JAK2 V617F mutation."},
+
+  // ── RESPIRATORY (from study app) ──
+  {topic:"Respiratory System", type:"MCQ",
+   q:"What is the most common causative organism of community-acquired pneumonia?",
+   opts:["Streptococcus pneumoniae","Pseudomonas aeruginosa","Klebsiella pneumoniae","Staphylococcus aureus"], ans:0,
+   explain:"Streptococcus pneumoniae (pneumococcus) is the leading cause of community-acquired pneumonia in adults. It produces rust-coloured (blood-tinged) sputum and causes lobar consolidation. Klebsiella and Pseudomonas are more common in hospital-acquired and immunocompromised settings."},
+
+  {topic:"Respiratory System", type:"MCQ",
+   q:"Which sputum colour suggests Pseudomonas aeruginosa infection in pneumonia?",
+   opts:["Green","Rusty/red","Gelatinous","Foul-smelling"], ans:0,
+   explain:"Pseudomonas aeruginosa classically produces green (pyocyanin-pigmented) sputum. Rusty/red sputum suggests pneumococcal pneumonia; foul-smelling sputum suggests anaerobic infection; gelatinous sputum is associated with Klebsiella."},
+
+  {topic:"Respiratory System", type:"MCQ",
+   q:"Which spirometry ratio defines airflow obstruction in COPD?",
+   opts:["FEV1/FVC less than 0.70","FEV1/FVC greater than 0.80","FVC less than 80% predicted","PEFR less than 60% predicted"], ans:0,
+   explain:"COPD is defined by a post-bronchodilator FEV1/FVC ratio below 0.70 (70%), indicating irreversible obstructive airflow limitation. This distinguishes it from restrictive lung disease where FVC is reduced but the ratio is preserved or elevated."},
+
+  {topic:"Respiratory System", type:"MCQ",
+   q:"What is the classic clinical description of a COPD patient with chronic bronchitis?",
+   opts:["Blue bloater","Pink puffer","Barrel chest only","Silent chest"], ans:0,
+   explain:"Chronic bronchitis COPD (type B) presents as a 'blue bloater' — cyanosed (hypoxic) and oedematous (right heart failure from hypoxic vasoconstriction). Emphysema (type A) presents as a 'pink puffer' — tachypnoeic but maintaining oxygenation through increased respiratory effort."},
+
+  {topic:"Respiratory System", type:"MCQ",
+   q:"What are the three sequential stages of ARDS?",
+   opts:["Exudative, proliferative, fibrotic","Acute, subacute, chronic","Vascular, cellular, resolution","Inflammatory, regenerative, scarring"], ans:0,
+   explain:"ARDS (acute respiratory distress syndrome) progresses through: (1) Exudative phase — protein-rich fluid floods alveoli; (2) Proliferative phase — type II pneumocyte proliferation and repair; (3) Fibrotic phase — irreversible scarring and reduced lung compliance if unresolved."},
+
+  {topic:"Respiratory System", type:"MCQ",
+   q:"What is the normal range for oxygen saturation (SpO₂) at sea level?",
+   opts:["95–99%","88–92%","90–95%","99–100%"], ans:0,
+   explain:"Normal SpO₂ is 95–99%. Values below 94% warrant supplemental oxygen in most clinical settings. Values of 88–92% may be acceptable targets in COPD patients to avoid blunting their hypoxic respiratory drive."},
+
+  // ── GASTROINTESTINAL (from study app) ──
+  {topic:"Gastrointestinal System", type:"MCQ",
+   q:"What key mechanism allows H. pylori to survive in the acidic stomach?",
+   opts:["Secretes urease to create an alkaline microenvironment","Produces antacids","Penetrates stomach mucosa directly","Mimics gastric epithelial cells"], ans:0,
+   explain:"H. pylori secretes urease, which converts urea to ammonia → creates an alkaline microenvironment around the bacterium → neutralises gastric acid → allows survival and colonisation of the gastric mucosa → inflammation and ulceration."},
+
+  {topic:"Gastrointestinal System", type:"MCQ",
+   q:"What is Barrett's oesophagus?",
+   opts:["Pre-cancerous metaplasia — columnar cells replace squamous epithelium","Oesophageal adenocarcinoma","Oesophageal perforation","Benign oesophageal polyp"], ans:0,
+   explain:"Barrett's oesophagus is a pre-malignant condition where chronic acid reflux causes squamous epithelium of the lower oesophagus to undergo metaplasia → columnar (intestinal-type) epithelium. It significantly increases the risk of oesophageal adenocarcinoma."},
+
+  {topic:"Gastrointestinal System", type:"MCQ",
+   q:"Which HLA antigens strongly predispose to coeliac disease?",
+   opts:["HLA-DQ2 or HLA-DQ8","HLA-DR4 or HLA-DR3","HLA-B27","HLA-A1"], ans:0,
+   explain:"Coeliac disease is strongly associated with HLA-DQ2 (in ~90% of patients) and HLA-DQ8 (in most remaining cases). These MHC class II molecules present deamidated gliadin peptides to CD4+ T cells, triggering the autoimmune mucosal response."},
+
+  {topic:"Gastrointestinal System", type:"MCQ",
+   q:"Which fragment of gluten drives the immune pathology in coeliac disease?",
+   opts:["Gliadin","Gluten-binding protein","Amylase","Pepsin"], ans:0,
+   explain:"Gliadin (the alcohol-soluble component of gluten) is the immunogenic fragment in coeliac disease. Tissue transglutaminase deamidates gliadin → enhanced binding to HLA-DQ2/DQ8 → T cell activation → villous atrophy and malabsorption."},
+
+  {topic:"Gastrointestinal System", type:"MCQ",
+   q:"Which inflammatory bowel disease affects all four layers of the intestinal wall (transmural)?",
+   opts:["Crohn's disease","Ulcerative colitis","Coeliac disease","Irritable bowel syndrome"], ans:0,
+   explain:"Crohn's disease causes transmural (full-thickness) inflammation that can affect any part of the GI tract (mouth to anus), with skip lesions, granuloma formation, fistulae, and strictures. Ulcerative colitis is limited to the mucosa and submucosa, affecting only the colon."},
+
+  {topic:"Gastrointestinal System", type:"MCQ",
+   q:"What type of virus is hepatitis B?",
+   opts:["DNA virus","RNA virus","Retrovirus","Prion"], ans:0,
+   explain:"Hepatitis B virus (HBV) is a partially double-stranded DNA virus (Hepadnaviridae family). This is clinically important as it can integrate into the host genome → persistent infection → cirrhosis and hepatocellular carcinoma risk."},
+
+  {topic:"Gastrointestinal System", type:"MCQ",
+   q:"What tumour marker is characteristically elevated in hepatocellular carcinoma?",
+   opts:["Alpha-fetoprotein (AFP)","CEA","PSA","CA-125"], ans:0,
+   explain:"Alpha-fetoprotein (AFP) is a serum tumour marker elevated in hepatocellular carcinoma (HCC). Markedly elevated AFP (>400 ng/mL) combined with a hepatic mass on imaging is diagnostic. AFP is also elevated in testicular germ cell tumours."},
+
+  {topic:"Gastrointestinal System", type:"MCQ",
+   q:"What enzyme is characteristically elevated in acute pancreatitis?",
+   opts:["Serum amylase and lipase","ALT and AST","Bilirubin","Alkaline phosphatase"], ans:0,
+   explain:"Acute pancreatitis is diagnosed by elevated serum amylase (>3× normal) and/or lipase (more specific, elevated longer). These pancreatic enzymes leak into the bloodstream from damaged acinar cells due to inappropriate intrapancreatic enzyme activation."},
+
+  {topic:"Gastrointestinal System", type:"MCQ",
+   q:"What is the main digestive function of bile from the gallbladder?",
+   opts:["Emulsify fats for digestion","Digest proteins","Neutralise stomach acid","Absorb carbohydrates"], ans:0,
+   explain:"Bile contains bile salts (derived from cholesterol) that emulsify dietary fats → form micelles → increase the surface area for lipase action → fat digestion and absorption of fat-soluble vitamins (A, D, E, K) in the small intestine."},
+
+  {topic:"Gastrointestinal System", type:"MCQ",
+   q:"What type of diarrhoea is caused by Vibrio cholerae toxin stimulating massive water and electrolyte secretion?",
+   opts:["Secretory","Osmotic","Exudative","Motility-related"], ans:0,
+   explain:"Secretory diarrhoea results from toxin-driven active secretion of water and electrolytes into the intestinal lumen despite fasting (persists even when not eating). Cholera toxin activates adenylyl cyclase → raised cAMP → massive Cl⁻ and water secretion → 'rice-water' stools."},
+
+  // ── ENDOCRINE (from study app) ──
+  {topic:"Endocrine System", type:"MCQ",
+   q:"What is the most common cause of acromegaly?",
+   opts:["Benign pituitary macroadenoma","Ectopic GH secretion","Hypothalamic tumour","GH injections"], ans:0,
+   explain:"Acromegaly results from excess growth hormone (GH) in adults after epiphyseal plate fusion. >95% of cases are caused by a benign GH-secreting pituitary macroadenoma → IGF-1 elevation → disproportionate bony and soft tissue overgrowth."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"What distinguishes gigantism from acromegaly in GH excess?",
+   opts:["Gigantism: proportionate growth; acromegaly: disproportionate growth","Gigantism only affects the face","Acromegaly occurs in children only","Gigantism is caused by TSH excess"], ans:0,
+   explain:"GH excess before epiphyseal plate fusion (in childhood) causes gigantism — proportionate excessive height. After fusion (in adults), acromegaly develops — disproportionate enlargement of the hands, feet, jaw, and skull with soft tissue changes."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"What autoimmune mechanism causes Graves' disease?",
+   opts:["Autoantibodies activate TSH receptors → continuous T3/T4 overproduction","T cells destroy thyroid follicles","Anti-TPO antibodies block iodine uptake","TSH overstimulates thyroid via pituitary tumour"], ans:0,
+   explain:"Graves' disease is caused by thyroid-stimulating immunoglobulins (TSI/TSAB) — autoantibodies that bind and activate TSH receptors → continuous stimulation of thyroid hormone production → hyperthyroidism. It is the most common cause of hyperthyroidism."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"What thyroid function test pattern distinguishes primary from secondary hypothyroidism?",
+   opts:["Primary: HIGH TSH; Secondary: LOW TSH","Primary: LOW TSH; Secondary: HIGH TSH","Both have identical TSH levels","TSH is always undetectable in hypothyroidism"], ans:0,
+   explain:"In primary hypothyroidism (thyroid gland failure), low T3/T4 removes negative feedback → pituitary compensates → HIGH TSH. In secondary hypothyroidism (pituitary failure), insufficient TSH production → LOW T3/T4 AND LOW TSH."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"What type of oedema occurs in myxoedema (severe hypothyroidism)?",
+   opts:["Non-pitting oedema from mucopolysaccharide accumulation","Pitting oedema from cardiac failure","Lymphoedema from blocked lymphatics","Vasogenic oedema from inflammation"], ans:0,
+   explain:"Myxoedema is non-pitting oedema characteristic of severe hypothyroidism. Low metabolic rate → accumulation of mucopolysaccharides (glycosaminoglycans) in connective tissue → water binding → tissue swelling that does not pit on pressure."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"What are the autoimmune targets in Hashimoto's thyroiditis?",
+   opts:["Thyroid peroxidase, thyroglobulin, and TSH receptors","TSH receptor only (activating)","Thyroid follicular cells via NK cells","Thyroxine-binding globulin"], ans:0,
+   explain:"Hashimoto's thyroiditis involves autoantibodies against thyroid peroxidase (TPO — most sensitive marker), thyroglobulin, and TSH receptors (blocking type). CD4+ T cells also directly attack thyroid follicular cells → progressive destruction → hypothyroidism."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"What is the most common iatrogenic cause of hypoparathyroidism?",
+   opts:["Accidental removal of parathyroid glands during thyroidectomy","Radioactive iodine therapy","Radiation to the neck","Prolonged calcium deficiency"], ans:0,
+   explain:"The four parathyroid glands sit on the posterior surface of the thyroid. Accidental removal during thyroidectomy (or devascularisation) is the most common cause of iatrogenic hypoparathyroidism → hypocalcaemia → neuromuscular excitability → tetany."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"What is the difference between Cushing's disease and Cushing's syndrome?",
+   opts:["Disease = pituitary/adrenal tumour; Syndrome = prolonged corticosteroid drug therapy","Disease is milder; Syndrome is severe","Syndrome affects only children; Disease affects adults","There is no clinical difference"], ans:0,
+   explain:"Cushing's syndrome is the broader term for any cause of cortisol excess — including exogenous corticosteroid therapy (most common). Cushing's disease specifically refers to a pituitary ACTH-secreting adenoma causing bilateral adrenal hyperplasia and cortisol excess."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"Why do patients with Addison's disease develop hyperpigmentation?",
+   opts:["Compensatory ACTH excess acts on skin like melanocyte-stimulating hormone","Low cortisol directly stimulates melanocytes","Aldosterone deficiency causes pigment deposits","Iron accumulation causes bronzing"], ans:0,
+   explain:"In Addison's disease, low cortisol removes negative feedback → pituitary releases excess ACTH (and pro-opiomelanocortin). ACTH shares structural homology with MSH (melanocyte-stimulating hormone) → stimulates melanin production → characteristic bronzed hyperpigmentation."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"What electrolyte pattern is expected in Addison's disease (primary adrenal insufficiency)?",
+   opts:["Hyponatraemia and hyperkalaemia","Hypernatraemia and hypokalaemia","Hypernatraemia and hyperkalaemia","Hyponatraemia and hypokalaemia"], ans:0,
+   explain:"Aldosterone deficiency in Addison's disease → impaired Na+ retention and K+ excretion by the kidney → hyponatraemia (low sodium) and hyperkalaemia (high potassium). Cortisol deficiency adds hypoglycaemia. This triad is the biochemical hallmark."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"What are the 5H clinical features of phaeochromocytoma?",
+   opts:["Hypertension, Headache, Hyperglycaemia, Hypermetabolism, Hyperhidrosis","Hypertension, Haemorrhage, Hypoxia, Hypokalaemia, Haematuria","Headache, Hepatomegaly, Haematuria, Hypocalcaemia, Hyperthermia","Hypertension, Hyponatraemia, Hypoglycaemia, Hirsutism, Haemolysis"], ans:0,
+   explain:"Phaeochromocytoma (adrenal medullary tumour secreting catecholamines) classically presents with 5Hs: Hypertension (episodic or persistent), Headache (severe), Hyperhidrosis (sweating), Heart palpitations, and Hyperglycaemia/Hypermetabolism. Episodes are paroxysmal."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"Why does pituitary dwarfism cause hypoglycaemia rather than hyperglycaemia?",
+   opts:["GH deficiency removes its anti-insulin effect, lowering blood glucose","Beta cells are destroyed","Excess cortisol drives glucose down","TSH suppresses gluconeogenesis"], ans:0,
+   explain:"Growth hormone (GH) is counter-regulatory — it opposes insulin and raises blood glucose. In GH deficiency, this anti-insulin effect is lost → insulin acts unopposed → hypoglycaemia. This is why GH deficiency in children requires careful glucose monitoring."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"What is the defining feature of all forms of diabetes mellitus?",
+   opts:["Hyperglycaemia","Hypoglycaemia","Glycosuria","Ketonuria"], ans:0,
+   explain:"All forms of diabetes mellitus — Type 1, Type 2, gestational, and others — share hyperglycaemia as their defining feature. The mechanism differs (absolute insulin deficiency in T1D vs insulin resistance in T2D), but elevated blood glucose is universal."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"What is the primary mechanism of Type 1 diabetes mellitus?",
+   opts:["Autoimmune T-cell mediated destruction of pancreatic beta cells","Peripheral insulin receptor downregulation","Excess glucagon secretion from alpha cells","Pancreatic duct obstruction"], ans:0,
+   explain:"T1D results from autoimmune destruction of insulin-producing beta cells in the islets of Langerhans, mediated primarily by autoreactive CD8+ and CD4+ T cells. Loss of beta cell mass → absolute insulin deficiency → hyperglycaemia and DKA susceptibility."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"What distinguishes T2D from T1D on initial laboratory diagnosis?",
+   opts:["T2D: no autoantibodies; T1D: autoantibodies present","T2D requires insulin immediately; T1D does not","T2D affects only the elderly; T1D affects only children","T2D always presents with DKA"], ans:0,
+   explain:"T1D is characterised by the presence of autoantibodies (anti-GAD, anti-islet cell, anti-insulin) reflecting the autoimmune process. T2D has no autoantibodies and is associated with insulin resistance, obesity, and metabolic syndrome."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"Why does DKA develop in T1D but rarely in T2D?",
+   opts:["In T1D, absolute insulin deficiency allows unchecked lipolysis → ketone body formation","T2D patients produce more glucagon","T1D patients eat more carbohydrates","T2D is always treated before DKA can develop"], ans:0,
+   explain:"Insulin normally suppresses lipolysis. In T1D, absolute insulin deficiency → unrestrained lipolysis → free fatty acids → hepatic ketogenesis → ketone body accumulation → metabolic acidosis (DKA). In T2D, residual insulin production suppresses ketogenesis even when glucose is high."},
+
+  // ── REPRODUCTIVE (from study app) ──
+  {topic:"Reproductive System", type:"MCQ",
+   q:"What is the key prostaglandin-mediated mechanism causing primary dysmenorrhoea?",
+   opts:["Uterine spasm and ischaemia from elevated prostaglandins","Endometrial hyperplasia from unopposed oestrogen","HPV-induced cervical changes","Retrograde menstruation into the pelvis"], ans:0,
+   explain:"Primary dysmenorrhoea results from excess prostaglandin E2 and F2α production during menstruation → uterine smooth muscle contractions → ischaemia → pain. NSAIDs (prostaglandin synthesis inhibitors) and the OCP are the primary treatments."},
+
+  {topic:"Reproductive System", type:"MCQ",
+   q:"Which two HPV serotypes are most strongly linked to cervical cancer?",
+   opts:["16 and 18","6 and 11","31 and 33","18 and 45"], ans:0,
+   explain:"HPV serotypes 16 and 18 are responsible for ~70% of cervical cancers. They produce oncoproteins E6 (inactivates p53) and E7 (inactivates Rb), impairing tumour suppression. HPV 6 and 11 cause genital warts but are low-risk for cancer."},
+
+  {topic:"Reproductive System", type:"MCQ",
+   q:"Which diagnosis requires two of these three criteria: irregular ovulation, hyperandrogenaemia, polycystic ovaries?",
+   opts:["PCOS","Endometriosis","Primary amenorrhoea","Uterine fibroids"], ans:0,
+   explain:"PCOS (polycystic ovarian syndrome) is diagnosed by the Rotterdam criteria — at least 2 of 3: (1) oligo/anovulation (irregular ovulation), (2) hyperandrogenaemia (elevated androgens or clinical signs), (3) polycystic ovaries on ultrasound."},
+
+  {topic:"Reproductive System", type:"MCQ",
+   q:"Endometrial (uterine) cancer most commonly presents in which patient group?",
+   opts:["Post-menopausal women aged 50–70","Adolescent girls at menarche","Women in their 30s with PCOS","Pre-menopausal nulliparous women"], ans:0,
+   explain:"Endometrial (uterine) cancer is most common in post-menopausal women aged 50–70. The most important risk factor is unopposed oestrogen exposure (obesity, late menopause, HRT, tamoxifen, nulliparity). It typically presents with post-menopausal bleeding."},
+
+  {topic:"Reproductive System", type:"MCQ",
+   q:"Ovarian cancer has a poor prognosis primarily because it:",
+   opts:["Is often asymptomatic and silent until advanced stage","Is resistant to all chemotherapy","Is always inherited via BRCA1 mutations","Metastasises within weeks of onset"], ans:0,
+   explain:"Ovarian cancer is the most lethal gynaecological cancer because it is typically asymptomatic until late (stage III/IV). Early disease causes only vague symptoms (bloating, pelvic discomfort). There is no effective screening test, making late diagnosis common."},
+
+  // ── MALE REPRODUCTIVE (from study app) ──
+  {topic:"Male Reproductive System", type:"MCQ",
+   q:"What is the most common cause of male infertility?",
+   opts:["Varicocele","Cryptorchidism","Hydrocele","Spermatocele"], ans:0,
+   explain:"Varicocele (dilation of the pampiniform venous plexus) is the most common surgically correctable cause of male infertility. Impaired venous drainage → increased testicular temperature → impaired spermatogenesis. It occurs predominantly on the left side."},
+
+  {topic:"Male Reproductive System", type:"MCQ",
+   q:"What is 5-alpha-dihydrotestosterone (5-DHT) and why is it important in BPH?",
+   opts:["Active testosterone metabolite that drives prostatic epithelial proliferation","A tumour marker for prostate cancer","A gonadotrophin released by the pituitary","The enzyme that converts oestrogen to androgen"], ans:0,
+   explain:"5-DHT is produced from testosterone by 5-alpha-reductase within prostate cells. It is a more potent androgen than testosterone and drives prostatic epithelial and stromal proliferation in BPH. 5-alpha-reductase inhibitors (e.g. finasteride) reduce DHT and prostate size."},
+
+  {topic:"Male Reproductive System", type:"MCQ",
+   q:"Prostate cancer most commonly metastasises to which organ?",
+   opts:["Bone (90%)","Lung (46%)","Liver (25%)","Adrenal glands (13%)"], ans:0,
+   explain:"Prostate cancer has a strong predilection for bone metastasis (osteoblastic/sclerotic lesions), occurring in ~90% of metastatic cases. Common sites include the spine, pelvis, and femur. Bone pain, pathological fractures, and spinal cord compression are key complications."},
+
+  {topic:"Male Reproductive System", type:"MCQ",
+   q:"What drug class is first-line for BPH to relax the bladder outlet?",
+   opts:["Alpha-adrenergic receptor blocker","5-alpha reductase inhibitor","Phosphodiesterase-5 inhibitor","Muscarinic antagonist"], ans:0,
+   explain:"Alpha-1 adrenergic receptor blockers (e.g. terazosin, tamsulosin) relax smooth muscle in the prostate and bladder neck → reduced urethral resistance → improved urine flow. They provide rapid symptom relief. 5-alpha reductase inhibitors (e.g. finasteride) shrink the prostate but take months to work."},
+
+  {topic:"Male Reproductive System", type:"MCQ",
+   q:"Which scrotal condition is a painless epididymal cyst containing sperm?",
+   opts:["Spermatocele","Hydrocele","Varicocele","Cryptorchidism"], ans:0,
+   explain:"A spermatocele is a benign, painless cystic outpouching of the epididymis containing milky fluid with spermatozoa. It transilluminates on examination. It is usually asymptomatic and requires no treatment unless large or uncomfortable."},
+
+  // ── MUSCULOSKELETAL ──
+  {topic:"Musculoskeletal System", type:"MCQ",
+   q:"Which inflammatory markers are key diagnostic criteria in rheumatoid arthritis?",
+   opts:["Uric acid and creatine kinase","ESR, CRP, rheumatoid factor, and anti-CCP antibody","PSA and ALP","D-dimer and fibrinogen"], ans:1,
+   explain:"RA diagnosis uses ESR (erythrocyte sedimentation rate), CRP (C-reactive protein) as inflammatory markers, rheumatoid factor (RF), and anti-cyclic citrullinated peptide (anti-CCP) antibody — the most specific marker for RA."},
+
+  {topic:"Musculoskeletal System", type:"MCQ",
+   q:"Gout is caused by deposition of which substance in joints?",
+   opts:["Calcium pyrophosphate","Uric acid (monosodium urate crystals)","Calcium oxalate","Cholesterol crystals"], ans:1,
+   explain:"Gout results from hyperuricaemia → monosodium urate crystal deposition in joints and soft tissues → acute inflammatory arthritis. Commonly affects the first metatarsophalangeal joint (podagra)."},
+
+  {topic:"Musculoskeletal System", type:"MCQ",
+   q:"Muscular dystrophy is caused by a genetic defect in which protein?",
+   opts:["Myosin","Actin","Dystrophin","Troponin"], ans:2,
+   explain:"Duchenne and Becker muscular dystrophies result from mutations in the dystrophin gene (X-linked). Dystrophin provides structural stability to muscle cell membranes; without it, muscle fibres are progressively damaged."},
+
+  {topic:"Musculoskeletal System", type:"SAQ",
+   q:"Compare osteoarthritis and rheumatoid arthritis in terms of pathophysiology, joint distribution, and key diagnostic features.",
+   opts:null, ans:null,
+   explain:"Osteoarthritis: non-inflammatory (initially), degenerative; cartilage erosion and subchondral bone changes; affects weight-bearing joints (knees, hips), DIP joints; Heberden's nodes; diagnosis: X-ray (joint space narrowing, osteophytes); normal ESR/CRP. Rheumatoid arthritis: autoimmune, chronic synovial inflammation; pannus formation erodes cartilage and bone; symmetrical, affects MCP and PIP joints (spares DIP); morning stiffness >1 hour; elevated ESR, CRP, RF, anti-CCP; X-ray shows erosions and osteoporosis."},
+
+  {topic:"Musculoskeletal System", type:"SAQ",
+   q:"List five modifiable and three non-modifiable risk factors for osteoarthritis.",
+   opts:null, ans:null,
+   explain:"Modifiable: obesity (excess joint load), joint injury/overuse, occupational physical demands, muscle weakness (↓joint stability), sedentary lifestyle. Non-modifiable: age (commonest risk factor), female sex (post-menopausal), genetics/family history."},
+
+  {topic:"Musculoskeletal System", type:"LAQ",
+   q:"Describe the pathophysiology, signs and symptoms, investigations, and management of rheumatoid arthritis.",
+   opts:null, ans:null,
+   explain:"Pathophysiology: autoimmune activation (CD4+ T cells, B cells) → synovial membrane inflammation → pannus (vascular granulation tissue) formation → invasion and destruction of cartilage and bone. Pro-inflammatory cytokines (TNF-α, IL-1, IL-6) sustain the inflammatory cycle. Signs/symptoms: symmetrical joint pain and swelling (MCP, PIP, wrists, knees), morning stiffness >1 hour, systemic features (fatigue, fever, weight loss), extra-articular features (rheumatoid nodules, pulmonary fibrosis, vasculitis, Sjögren's overlap). Investigations: ESR and CRP ↑, rheumatoid factor (positive in ~70%), anti-CCP antibody (most specific), X-ray (periarticular osteoporosis, joint space narrowing, erosions), ultrasound/MRI for early synovitis. Management: DMARDs (methotrexate — first line), biological agents (anti-TNF: etanercept, adalimumab; anti-IL-6: tocilizumab), NSAIDs and corticosteroids (short-term), physiotherapy, occupational therapy, surgical joint replacement if severe."},
+
+  {topic:"Musculoskeletal System", type:"MCQ",
+   q:"Which pro-inflammatory cytokines drive cartilage destruction in OA via MMP activation?",
+   opts:["IL-1 and TNF-α","IL-6 and IL-17","TNF-β and IL-10","IFN-γ and IL-4"], ans:0,
+   explain:"In osteoarthritis, IL-1 and TNF-α stimulate chondrocytes and synoviocytes to produce matrix metalloproteinases (MMPs), which degrade type II collagen and aggrecan — the key structural components of articular cartilage. This drives the progressive cartilage destruction characteristic of OA."},
+
+  {topic:"Musculoskeletal System", type:"MCQ",
+   q:"What is eburnation and in which arthritis does it occur?",
+   opts:["Ivory-like densification of exposed subchondral bone in OA","Synovial pannus eroding cartilage in RA","Crystal deposition in periarticular tissue in gout","Fibrous replacement of bone in Paget disease"], ans:0,
+   explain:"Eburnation is the ivory-like, polished densification of exposed subchondral bone that occurs in advanced osteoarthritis after complete cartilage loss. Bone-on-bone contact causes the exposed surfaces to become sclerotic and smooth, visible on X-ray as subchondral sclerosis."},
+
+  {topic:"Musculoskeletal System", type:"MCQ",
+   q:"What is the primary cause of hyperuricaemia in >90% of gout cases?",
+   opts:["Reduced renal excretion of uric acid (genetically determined)","Excess dietary purine intake","Overproduction of uric acid by the liver","Increased xanthine oxidase activity"], ans:0,
+   explain:"In over 90% of gout cases, the cause is reduced renal excretion of uric acid — a genetically determined trait (underexcretion). Less commonly, gout results from uric acid overproduction (e.g. myeloproliferative disorders, enzyme defects). Dietary purines contribute but rarely cause gout alone."},
+
+  {topic:"Musculoskeletal System", type:"MCQ",
+   q:"What are the three phases of bone healing in order?",
+   opts:["Inflammation → Consolidation → Remodelling","Necrosis → Calcification → Ossification","Haematoma → Granulation → Scar formation","Resorption → Matrix deposition → Mineralisation"], ans:0,
+   explain:"Bone healing proceeds through: (1) Inflammation — haematoma forms, cytokines recruit repair cells, granulation tissue develops; (2) Consolidation — MSCs form fibrocartilage callus which mineralises into bone callus — immobilisation is critical; (3) Remodelling — mature lamellar bone forms over months to years via osteoblast/osteoclast activity."},
+
+  {topic:"Musculoskeletal System", type:"MCQ",
+   q:"Which tumour suppressor gene mutations are linked to osteosarcoma?",
+   opts:["TP53 and RB1","BRCA1 and BRCA2","APC and MLH1","KRAS and EGFR"], ans:0,
+   explain:"Osteosarcoma is strongly associated with mutations in TP53 (Li-Fraumeni syndrome) and RB1 (retinoblastoma gene). Loss of these tumour suppressors removes critical cell cycle checkpoints → uncontrolled osteoblastic proliferation → malignant bone matrix production."},
+
+  {topic:"Musculoskeletal System", type:"MCQ",
+   q:"What is the life-threatening renal complication of rhabdomyolysis?",
+   opts:["Acute renal failure from myoglobin blocking renal tubules","Renal artery thrombosis","Glomerulonephritis from immune complex deposition","Hypernatraemia from sodium wasting"], ans:0,
+   explain:"Rhabdomyolysis releases myoglobin from destroyed muscle fibres into the circulation. Myoglobin is filtered by the glomerulus → precipitates in and blocks renal tubules (especially in acidic urine) → tubular necrosis → acute renal failure. Treatment is aggressive IV hydration and urine alkalinisation."},
+
+  {topic:"Musculoskeletal System", type:"MCQ",
+   q:"What neuroendocrine changes underlie fibromyalgia?",
+   opts:["Reduced serotonin + elevated substance P + HPA axis dysregulation","Excess dopamine and reduced GABA","Reduced acetylcholine at neuromuscular junctions","Elevated noradrenaline and reduced melatonin"], ans:0,
+   explain:"Fibromyalgia involves central sensitisation driven by: reduced serotonin (normally inhibits pain transmission), elevated substance P (amplifies pain signals), and HPA axis dysregulation (abnormal stress-cortisol response). These changes lower the pain threshold — explaining allodynia and widespread pain without structural pathology."},
+
+  {topic:"Musculoskeletal System", type:"MCQ",
+   q:"What early urine finding is characteristic of rhabdomyolysis?",
+   opts:["Brown/dark urine (myoglobinuria)","Frothy urine (proteinuria)","Haematuria","Oliguria only"], ans:0,
+   explain:"Brown or dark (cola-coloured) urine is the classic early sign of rhabdomyolysis, reflecting myoglobinuria — myoglobin excreted in the urine from destroyed muscle cells. It must be distinguished from haematuria (blood in urine). Elevated serum CK confirms muscle breakdown."},
+
+  {topic:"Musculoskeletal System", type:"MCQ",
+   q:"Which diagnostic tool shows joint space narrowing and osteophytes in OA but cannot visualise cartilage?",
+   opts:["X-ray","MRI","Arthroscopy","Ultrasound"], ans:0,
+   explain:"Plain X-ray (radiograph) is the standard initial imaging for OA. It shows indirect signs of cartilage loss (joint space narrowing), osteophytes (bony spurs), subchondral sclerosis, and cysts. However, cartilage is radiolucent and cannot be directly visualised — MRI or arthroscopy are needed for that."},
+
+  {topic:"Musculoskeletal System", type:"SAQ",
+   q:"Describe the pathophysiology and clinical presentation of gout, and outline acute and long-term management.",
+   opts:null, ans:null,
+   explain:"Pathophysiology: hyperuricaemia (reduced renal excretion in >90%) → monosodium urate crystal deposition in joints and soft tissues → neutrophil-mediated inflammatory response (crystals activate NLRP3 inflammasome → IL-1β release) → intense acute arthritis. Crystals cannot be dissolved once formed. Clinical presentation: acute monoarthritis (podagra — 1st MTP joint in >50%), sudden onset of severe pain, erythema, warmth, swelling; self-limiting in 5–14 days. Chronic gout: tophi (crystal deposits in soft tissue), joint damage, renal stones. Management — Acute: NSAIDs (first-line), colchicine (inhibits neutrophil microtubule function), corticosteroids (if contraindications to NSAIDs). Long-term: allopurinol (xanthine oxidase inhibitor — reduces uric acid production), probenecid (uricosuric — increases renal excretion), dietary modification (avoid organ meats, shellfish, alcohol, fructose), adequate hydration."},
+
+  {topic:"Musculoskeletal System", type:"SAQ",
+   q:"Describe the pathophysiology, signs and symptoms, and management of Duchenne Muscular Dystrophy (DMD).",
+   opts:null, ans:null,
+   explain:"Pathophysiology: X-linked mutation in the dystrophin gene (Xp21) → absent dystrophin protein → sarcolemmal membrane instability → uncontrolled calcium influx → proteolysis → muscle fibre necrosis → replacement by fibrous and fatty tissue. DMD has null mutations (no dystrophin); Becker MD has partial dystrophin (milder). Signs and symptoms: delayed motor milestones (late walking), frequent falls, Gowers' sign (using arms to stand from floor), pseudohypertrophy of calves (fat replaces muscle), waddling gait, progressive proximal weakness, cardiomyopathy, and respiratory failure (leading causes of death). Management: corticosteroids (prednisolone/deflazacort — slow muscle deterioration), physiotherapy, spinal bracing (scoliosis), non-invasive ventilation (respiratory failure), cardiac monitoring and ACE inhibitors (cardiomyopathy), gene therapy approaches (exon skipping — ataluren for nonsense mutations), multidisciplinary team care."},
+
+  {topic:"Musculoskeletal System", type:"LAQ",
+   q:"Compare and contrast osteoarthritis, rheumatoid arthritis, and gout — including pathophysiology, joint distribution, morning stiffness, key investigations, and management principles.",
+   opts:null, ans:null,
+   explain:"Osteoarthritis — Pathophysiology: degenerative/mechanical; IL-1 and TNF-α activate MMPs → cartilage breakdown; cartilage fibrillation → clefts → eburnation; subchondral bone hypertrophies. Joint distribution: asymmetric; weight-bearing joints (knees, hips), DIP hands, spine. Morning stiffness: <15 minutes. Key investigations: X-ray (joint space narrowing, osteophytes, subchondral sclerosis); synovial fluid is non-inflammatory. Management: NSAIDs, weight loss, exercise, intra-articular corticosteroids, joint replacement. Rheumatoid Arthritis — Pathophysiology: autoimmune; CD4+ T cells attack synovium → macrophage activation → TNF-α, IL-1, RANK ligand → pannus formation → cartilage and bone erosion. Joint distribution: symmetric; small joints (MCP, PIP, wrists, feet). Morning stiffness: >1 hour. Key investigations: anti-CCP (~90% specific), rheumatoid factor, elevated ESR/CRP, X-ray (erosions, periarticular osteoporosis), ACR/EULAR score ≥6. Management: methotrexate (DMARD first-line), anti-TNF biologics (infliximab, adalimumab), corticosteroids, physiotherapy. Gout — Pathophysiology: metabolic; reduced renal uric acid excretion → hyperuricaemia → monosodium urate crystal deposition → neutrophil-mediated NLRP3 activation → acute inflammation. Joint distribution: monoarticular; 1st MTP (podagra) in >50%, then ankles, knees. Morning stiffness: not prominent. Key investigations: serum uric acid, arthrocentesis (needle-shaped, negatively birefringent crystals under polarising microscopy). Management: acute — NSAIDs, colchicine, corticosteroids; long-term — allopurinol, probenecid, dietary modification."}
+,
+
+  // ── NEW QUESTIONS FROM EXAM PREP DOCUMENT ──
+
+  // === PART A NEW MCQs ===
+
+  // CNS
+  {topic:"CNS Disorders", type:"MCQ",
+   q:"A patient has right-sided motor weakness and expressive aphasia after a stroke. Which hemisphere is damaged?",
+   opts:["Right hemisphere","Left hemisphere","Cerebellum","Brainstem"], ans:1,
+   explain:"Left hemisphere damage causes right-sided motor/sensory deficits and language impairment (aphasia). Right hemisphere damage causes left-sided deficits and impaired judgement, without typically affecting language."},
+
+  {topic:"CNS Disorders", type:"MCQ",
+   q:"Which is the most critical first imaging test in acute stroke management?",
+   opts:["MRI","CT scan","Carotid duplex ultrasound","EEG"], ans:1,
+   explain:"CT scan is the essential first test. It differentiates ischaemic from haemorrhagic stroke — a critical distinction because thrombolytics used in ischaemic stroke are fatal in haemorrhagic stroke."},
+
+  {topic:"CNS Disorders", type:"MCQ",
+   q:"Lewy bodies found in surviving neurons in Parkinson's disease contain which protein?",
+   opts:["Tau","Beta-amyloid","Alpha-synuclein and ubiquitin","TDP-43"], ans:2,
+   explain:"Lewy bodies are intraneuronal inclusions composed of alpha-synuclein and ubiquitin. They are found in surviving dopaminergic neurons in the substantia nigra and are a pathological hallmark of Parkinson's disease."},
+
+  {topic:"CNS Disorders", type:"MCQ",
+   q:"Which feature distinguishes a complex partial seizure from a simple partial seizure?",
+   opts:["Presence of tonic-clonic movements","Reduced or altered consciousness","Duration lasting more than 5 minutes","Bilateral limb involvement"], ans:1,
+   explain:"Simple partial seizures occur without loss of consciousness. Complex partial seizures involve altered or reduced consciousness, often with automatisms (repetitive purposeless movements). Neither involves the generalised tonic-clonic pattern."},
+
+  {topic:"CNS Disorders", type:"MCQ",
+   q:"Which drug class is used acutely to terminate status epilepticus?",
+   opts:["Antiepileptics (carbamazepine)","Benzodiazepines (diazepam)","Osmotic diuretics","Dopamine agonists"], ans:1,
+   explain:"Benzodiazepines (e.g. diazepam, lorazepam) are first-line for terminating acute seizures and status epilepticus due to their rapid GABAergic action. Long-term antiepileptics (carbamazepine, valproate) are used for chronic control."},
+
+  {topic:"CNS Disorders", type:"MCQ",
+   q:"Which shared mechanism underlies most neurodegenerative disorders?",
+   opts:["Bacterial infection of CNS","Oxidative stress, mitochondrial dysfunction, and excitotoxicity","Demyelination of peripheral nerves","Autoimmune antibody attack on neuromuscular junction"], ans:1,
+   explain:"Common mechanisms across neurodegenerative disorders include oxidative stress (free radical damage), mitochondrial dysfunction (↓ATP → apoptosis), excitotoxicity (excess glutamate → Ca2+ influx → cell death), and neuroinflammation from microglial activation."},
+
+  // CVS
+  {topic:"Cardiovascular System", type:"MCQ",
+   q:"Which inotropic drug is used to support cardiac output when pneumonia progresses to sepsis?",
+   opts:["Salbutamol","Dobutamine (dopaminergic agonist)","Furosemide","Metoprolol"], ans:1,
+   explain:"Dobutamine is a beta-1/2 agonist and dopaminergic agent used as an inotrope to increase cardiac contractility and support output in septic or cardiogenic shock. It is the drug referenced in the respiratory notes for sepsis complicating pneumonia."},
+
+  {topic:"Cardiovascular System", type:"MCQ",
+   q:"Which ECG finding is specific to NSTEMI (not STEMI)?",
+   opts:["ST elevation","Q waves","ST depression or T-wave inversion without Q waves","Prolonged QRS"], ans:2,
+   explain:"NSTEMI causes subendocardial infarction → ST depression or T-wave inversion on ECG, without the persistent ST elevation or Q wave formation seen in full-thickness STEMI."},
+
+  {topic:"Cardiovascular System", type:"MCQ",
+   q:"Cardiogenic shock develops when approximately what percentage of myocardium is irreversibly damaged?",
+   opts:["10%","20%","40%","60%"], ans:2,
+   explain:"Cardiogenic shock occurs when ~40% of the myocardium is damaged, causing profound reduction in cardiac output, leading to hypotension, poor tissue perfusion, anaerobic metabolism, and a self-perpetuating cycle of deterioration."},
+
+  {topic:"Cardiovascular System", type:"MCQ",
+   q:"Which biomarker is markedly elevated in heart failure and used for diagnosis and monitoring?",
+   opts:["Troponin I","CRP","BNP/NT-proBNP","D-dimer"], ans:2,
+   explain:"BNP (B-type natriuretic peptide) and NT-proBNP are released by distended ventricular myocytes and are the key biomarkers for heart failure diagnosis, severity assessment, and treatment monitoring."},
+
+  {topic:"Cardiovascular System", type:"MCQ",
+   q:"Which NYHA class of heart failure describes symptoms at rest?",
+   opts:["Class I","Class II","Class III","Class IV"], ans:3,
+   explain:"NYHA Class IV: symptoms (dyspnoea, fatigue) at rest, unable to carry out any physical activity. Class I = no limitation. Class II = slight limitation. Class III = marked limitation with less-than-ordinary activity."},
+
+  {topic:"Cardiovascular System", type:"MCQ",
+   q:"Which drug class improves outcomes in HFrEF by reducing cardiac remodelling and is considered part of quadruple GDMT?",
+   opts:["Loop diuretics","Aldosterone antagonists (e.g. spironolactone)","Calcium channel blockers","Digoxin"], ans:1,
+   explain:"Spironolactone (aldosterone antagonist) reduces myocardial fibrosis, fluid retention, and mortality in HFrEF. Quadruple GDMT = ACEi/ARB/ARNI + beta-blocker + MRA + SGLT2 inhibitor."},
+
+  // Renal
+  {topic:"Renal System", type:"MCQ",
+   q:"Which bacteria specifically cause struvite kidney stones by producing urease?",
+   opts:["E. coli","Proteus mirabilis","Staphylococcus aureus","Klebsiella"], ans:1,
+   explain:"Proteus mirabilis produces urease, which splits urea into ammonium → alkalises urine → promotes struvite (magnesium ammonium phosphate) stone formation. Struvite stones are the classic 'staghorn calculi'."},
+
+  {topic:"Renal System", type:"MCQ",
+   q:"Which renal complication occurs in chronic pyelonephritis if untreated?",
+   opts:["Acute haemorrhagic cystitis","Nephrotic syndrome","Progressive scarring and chronic renal failure","Urinary incontinence only"], ans:2,
+   explain:"Chronic pyelonephritis involves repeated infection → progressive scarring and irreversible nephron loss → chronic renal failure. It is often asymptomatic until considerable tissue is destroyed."},
+
+  {topic:"Renal System", type:"MCQ",
+   q:"What is the first-line empiric antibiotic for uncomplicated cystitis (low MDR risk)?",
+   opts:["Ciprofloxacin","Amoxicillin","Nitrofurantoin or fosfomycin","Ceftriaxone"], ans:2,
+   explain:"Nitrofurantoin or fosfomycin are recommended first-line for uncomplicated cystitis with low MDR risk. Ciprofloxacin is preferred for pyelonephritis. Ceftriaxone is IV and used in high-risk/septic cases."},
+
+  // Respiratory
+  {topic:"Respiratory System", type:"MCQ",
+   q:"Which tuberculosis diagnostic test involves intradermal injection of purified protein derivative and is read at 48–72 hours?",
+   opts:["IGRA (interferon-gamma release assay)","Sputum AFB smear","Mantoux test (PPD)","Chest CT"], ans:2,
+   explain:"The Mantoux (Tuberculin) test involves intradermal injection of PPD; a transverse induration ≥5 mm at 48–72 hours is positive, indicating hypersensitivity to tuberculin protein. IGRA is a newer blood-based alternative."},
+
+  {topic:"Respiratory System", type:"MCQ",
+   q:"In ARDS, which stage involves fibroblast activation and collagen deposition?",
+   opts:["Exudative stage (week 1)","Proliferative stage (weeks 2–4)","Fibrotic stage","Resolution stage"], ans:1,
+   explain:"ARDS stage 2 (Proliferative, weeks 2–4): fibroblast activation, fibrinolysis, collagen deposition, and attempted cellular regeneration. Stage 1 (Exudative): oedema, ↓surfactant. Stage 3 (Fibrotic): coagulation-fibrinolysis imbalance, microthrombi."},
+
+  {topic:"Respiratory System", type:"MCQ",
+   q:"What is the key spirometry finding in obstructive lung disease?",
+   opts:["Normal FEV1/FVC ratio","Elevated TLC with normal FEV1","FEV1/FVC ratio below 70%","Reduced FVC with normal FEV1"], ans:2,
+   explain:"An FEV1/FVC ratio below 70% is the defining spirometric criterion for obstructive lung disease (e.g. asthma, COPD). In restrictive disease, both FEV1 and FVC are reduced but their ratio is preserved (normal or elevated)."},
+
+  {topic:"Respiratory System", type:"MCQ",
+   q:"Cystic fibrosis is caused by a mutation in the CFTR gene on which chromosome?",
+   opts:["Chromosome 7","Chromosome 11","Chromosome 17","X chromosome"], ans:0,
+   explain:"CF results from autosomal recessive mutation in the CFTR (cystic fibrosis transmembrane conductance regulator) gene on chromosome 7 → defective chloride transport → dehydrated, thick, sticky secretions."},
+
+  {topic:"Respiratory System", type:"MCQ",
+   q:"Which pathogen causes green sputum in pneumonia?",
+   opts:["Streptococcus pneumoniae","Klebsiella pneumoniae","Pseudomonas aeruginosa","Staphylococcus aureus"], ans:2,
+   explain:"Pseudomonas aeruginosa produces a characteristic green pigment (pyocyanin), causing green sputum. S. pneumoniae = rusty/red. Klebsiella = gelatinous. Anaerobes = foul-smelling."},
+
+  {topic:"Respiratory System", type:"MCQ",
+   q:"Which influenza mechanism enables major antigenic change that can cause pandemics?",
+   opts:["Antigenic drift (minor point mutations)","Antigenic shift (major genetic reassortment between strains)","Endosomal escape","Direct RNA recombination"], ans:1,
+   explain:"Antigenic shift involves major genetic reassortment between different influenza strains (e.g. human + avian + swine), producing a novel subtype that most people have no immunity to — the basis for pandemic influenza. Antigenic drift = minor mutations causing seasonal variation."},
+
+  // GI
+  {topic:"Gastrointestinal System", type:"MCQ",
+   q:"What percentage of duodenal ulcer patients are infected with H. pylori?",
+   opts:["50%","70%","95%","30%"], ans:2,
+   explain:"H. pylori is found in approximately 95% of duodenal ulcer patients and 80% of gastric ulcer patients. H. pylori was discovered by Barry Marshall and Robin Warren (Nobel Prize 2005); Marshall famously self-infected to prove causation."},
+
+  {topic:"Gastrointestinal System", type:"MCQ",
+   q:"Coeliac disease is most strongly associated with which HLA types?",
+   opts:["HLA-B27 and HLA-DR4","HLA-DQ2 or HLA-DQ8","HLA-A1 and HLA-B8","HLA-DR3 and HLA-DR5"], ans:1,
+   explain:"Coeliac disease has a strong genetic association with HLA-DQ2 (in ~90%) and HLA-DQ8 — these MHC class II molecules present the gliadin peptide to CD4+ T cells, initiating the autoimmune response causing villous atrophy."},
+
+  {topic:"Gastrointestinal System", type:"MCQ",
+   q:"Which tumour marker is elevated in hepatocellular carcinoma and is normally only produced by foetal liver?",
+   opts:["PSA","CEA","AFP (alpha-fetoprotein)","CA-125"], ans:2,
+   explain:"AFP (alpha-fetoprotein) is normally produced only by foetal liver and yolk sac. Malignant hepatocytes reactivate its production. Elevated serum AFP in a patient with cirrhosis is a key marker for HCC."},
+
+  {topic:"Gastrointestinal System", type:"MCQ",
+   q:"In acute pancreatitis caused by gallstones, what is the primary pathological event?",
+   opts:["Autoimmune destruction of acinar cells","Gallstone blocks the pancreatic duct → enzymes back up → autodigestion","Bacterial infection of pancreatic tissue","Alcohol directly destroys acinar cells"], ans:1,
+   explain:"A gallstone lodged in the common bile duct or ampulla of Vater blocks the pancreatic duct → pancreatic enzymes back up → premature activation inside the gland → autodigestion of the pancreas (proteolysis + lipolysis) → severe inflammation."},
+
+  {topic:"Gastrointestinal System", type:"MCQ",
+   q:"What percentage of the liver must be damaged before major symptoms of cirrhosis appear?",
+   opts:["25%","50%","75%","90%"], ans:2,
+   explain:"More than 75% of hepatic tissue must be destroyed before major symptoms of cirrhosis become apparent — reflecting the liver's enormous functional reserve. This is why cirrhosis is often diagnosed late."},
+
+  {topic:"Gastrointestinal System", type:"MCQ",
+   q:"Which of the following is a pre-malignant complication of chronic GORD?",
+   opts:["Oesophageal varices","Barrett's oesophagus","Mallory-Weiss tear","Achalasia"], ans:1,
+   explain:"Barrett's oesophagus is a metaplastic change where the normal squamous epithelium of the oesophagus is replaced by columnar epithelium in response to chronic acid exposure. It is a pre-cancerous condition that can progress to oesophageal adenocarcinoma."},
+
+  // Endocrine
+  {topic:"Endocrine System", type:"MCQ",
+   q:"Which finding on thyroid function tests confirms primary hypothyroidism?",
+   opts:["High T4 and low TSH","Low T4 and high TSH","High T4 and high TSH","Low T4 and low TSH"], ans:1,
+   explain:"In primary hypothyroidism, the thyroid gland fails to produce T3/T4 → the pituitary compensates by releasing excess TSH. Result: low T3/T4 + high TSH. Secondary hypothyroidism: low TSH + low T4 (pituitary/hypothalamic failure)."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"Acromegaly results from excess GH secretion occurring at which stage of life?",
+   opts:["Before bone maturity (childhood)","After bone maturity (adults)","Only during puberty","At birth (congenital)"], ans:1,
+   explain:"GH excess before bone maturity → gigantism (proportionate accelerated growth). GH excess after bone maturity (epiphyseal fusion) → acromegaly: disproportionate enlargement of hands, feet, jaw, and soft tissues. Both usually from pituitary macroadenoma."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"Which antibody is targeted in Addison's disease (primary adrenal insufficiency)?",
+   opts:["Anti-thyroglobulin","Anti-21-beta-hydroxylase","Anti-TSH receptor","Anti-insulin"], ans:1,
+   explain:"The most common cause of Addison's disease is autoimmune attack on the adrenal cortex, mediated by antibodies against 21-beta-hydroxylase — the key enzyme in corticosteroid synthesis. This causes deficiency of cortisol, aldosterone, and androgens."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"Pheochromocytoma causes the '5H' symptoms. Which of the following is one of the 5Hs?",
+   opts:["Hypotension","Hyperhydration","Hyperhidrosis","Hypoglycaemia"], ans:2,
+   explain:"Pheochromocytoma 5Hs: Hypertension, Headache, Hyperglycaemia, Hypermetabolism, Hyperhidrosis (excessive sweating). The tumour hypersecrets adrenaline and noradrenaline from the adrenal medulla."},
+
+  {topic:"Endocrine System", type:"MCQ",
+   q:"In Type 2 diabetes, which cellular mechanism causes peripheral insulin resistance?",
+   opts:["Autoimmune destruction of beta cells","Receptor downregulation and deranged intracellular signalling → reduced glucose uptake","Excess glucagon from alpha cells","Pancreatic duct obstruction blocking enzyme release"], ans:1,
+   explain:"T2D: receptor downregulation → impaired post-receptor intracellular signalling cascade → reduced GLUT4 translocation → decreased glucose uptake by muscle and adipose tissue. Compensatory hyperinsulinaemia follows until beta-cell exhaustion."},
+
+  // MSK
+  {topic:"Musculoskeletal System", type:"MCQ",
+   q:"Which joint is most commonly affected in the initial presentation of gout?",
+   opts:["Knee","Ankle","First metatarsophalangeal (MTP) joint (big toe)","Wrist"], ans:2,
+   explain:"The 1st MTP joint (big toe) is affected in >50% of initial gout attacks — a presentation called podagra. The lower temperature in peripheral joints favours urate crystal precipitation. Other common sites: ankle, midfoot, knee."},
+
+  {topic:"Musculoskeletal System", type:"MCQ",
+   q:"What is the primary difference between a pathological fracture and a fatigue fracture?",
+   opts:["Pathological fractures occur in weakened bone (disease/tumour/osteoporosis); fatigue fractures result from repetitive stress","Fatigue fractures are always compound; pathological are always simple","Pathological fractures heal faster","Fatigue fractures only affect the elderly"], ans:0,
+   explain:"Pathological fracture: occurs in already-weakened bone (osteoporosis, metastatic cancer, Paget's disease) with minimal or no force. Fatigue (stress) fracture: repetitive microtrauma from overuse in otherwise normal bone (e.g. runners, military recruits — posterior medial tibial pain)."},
+
+  // Reproductive
+  {topic:"Reproductive System", type:"MCQ",
+   q:"The mechanism of PDE5 inhibitors (e.g. sildenafil) in erectile dysfunction involves:",
+   opts:["Blocking testosterone receptors","Inhibiting PDE5 → ↑cGMP → NO → smooth muscle relaxation → ↑blood flow to corpus cavernosum","Stimulating GnRH from the hypothalamus","Blocking sympathetic vasoconstriction of penile arteries"], ans:1,
+   explain:"PDE5 inhibitors (sildenafil/Viagra) inhibit phosphodiesterase type 5 → ↑cyclic GMP → increased nitric oxide → corpus cavernosum smooth muscle relaxation → arterial dilation → erection. Requires sexual stimulation to activate the NO pathway."},
+
+  {topic:"Reproductive System", type:"MCQ",
+   q:"Which of the following is a feature of paraphimosis that makes it a urological emergency?",
+   opts:["Foreskin cannot be retracted from glans","Retracted foreskin cannot be returned → vascular engorgement and oedema of glans","Painful erection lasting >3 hours","Inability to pass urine due to meatal stenosis"], ans:1,
+   explain:"Paraphimosis: the retracted foreskin becomes trapped behind the coronal sulcus → venous and lymphatic obstruction → oedema and vascular engorgement of the glans. This is a urological emergency requiring urgent reduction to prevent ischaemia and necrosis."},
+
+  {topic:"Male Reproductive System", type:"MCQ",
+   q:"Why does varicocele predominantly affect the left side?",
+   opts:["Left testicular artery is longer","Left testicular vein drains at a right angle into the left renal vein, increasing venous pressure","Left testes are anatomically lower","The right side is protected by the inferior vena cava"], ans:1,
+   explain:"The left testicular vein drains at a right angle (90°) into the left renal vein — creating higher venous pressure and reducing drainage efficiency compared to the right testicular vein, which drains directly into the IVC at an oblique angle. This predisposes the left side to varicocele formation."},
+
+  {topic:"Reproductive System", type:"MCQ",
+   q:"PCOS is most commonly underpinned by which metabolic abnormality?",
+   opts:["Hypothyroidism","Insulin resistance → hyperinsulinaemia → ↓SHBG → ↑free androgens","Cortisol excess","Growth hormone deficiency"], ans:1,
+   explain:"The most common underlying mechanism of PCOS is insulin resistance → compensatory hyperinsulinaemia → reduced hepatic SHBG production → elevated free androgens → suppression of follicle maturation and ovulation → polycystic ovaries."},
+
+  // Inflammation
+  {topic:"Inflammation & Healing", type:"MCQ",
+   q:"Which phase of wound healing involves fibroblasts laying collagen and angiogenesis?",
+   opts:["Haemostasis","Inflammation","Proliferation","Remodelling"], ans:2,
+   explain:"Proliferation phase (days 3–21): fibroblasts produce new collagen, granulation tissue forms, angiogenesis occurs (new blood vessels), wound edges contract, and re-epithelialisation begins. Remodelling follows (months–years) as collagen reorganises and tensile strength increases."},
+
+  {topic:"Inflammation & Healing", type:"MCQ",
+   q:"The process of carcinogenesis involves three key stages. Which stage involves irreversible DNA damage by a carcinogen?",
+   opts:["Promotion","Initiation","Progression","Metastasis"], ans:1,
+   explain:"Initiation: irreversible DNA damage to a normal cell by a carcinogen → 'initiated' cell. Promotion: non-mutagenic factors stimulate clonal expansion (reversible if promoter removed). Progression: additional mutations → invasive, metastatic potential."},
+
+  {topic:"Inflammation & Healing", type:"MCQ",
+   q:"Which type of haemophilia is caused by Factor IX deficiency and is also called Christmas disease?",
+   opts:["Haemophilia A","Haemophilia B","Haemophilia C","Parahaemophilia"], ans:1,
+   explain:"Haemophilia B (Christmas disease) is caused by Factor IX deficiency — X-linked recessive. Haemophilia A = Factor VIII. Haemophilia C = Factor XI (autosomal, milder). Parahaemophilia = Factor V (rare)."},
+
+  {topic:"Inflammation & Healing", type:"MCQ",
+   q:"Sickle cell anaemia causes vaso-occlusion because:",
+   opts:["Low iron causes small fragile RBCs","HbS polymerises under low oxygen → rigid sickle-shaped RBCs → occlude microvasculature","Autoantibodies destroy RBCs in circulation","Thrombocytopenia causes clots in small vessels"], ans:1,
+   explain:"In sickle cell anaemia, the HbS mutation causes haemoglobin to polymerise under hypoxic conditions → rigid, sickle-shaped RBCs → haemolysis and vaso-occlusion in small vessels → ischaemia, painful crises, and organ damage."},
+
+  // === NEW SAQs ===
+
+  {topic:"CNS Disorders", type:"SAQ",
+   q:"Describe the pathophysiological mechanism of Parkinson's disease, including the role of dopamine and the TRAP mnemonic.",
+   opts:null, ans:null,
+   explain:"Pathophysiology: Progressive degeneration of dopaminergic neurons in the nigrostriatal pathway (substantia nigra pars compacta). Loss of dopamine disrupts basal ganglia circuits that normally facilitate smooth voluntary movement. The dopamine-acetylcholine imbalance (↓DA, relatively excess ACh) drives motor symptoms. Lewy bodies (aggregates of alpha-synuclein + ubiquitin) are found in surviving neurons. TRAP: Tremor at rest (pill-rolling, unilateral initially), Rigidity (cogwheel), Akinesia/bradykinesia (slow, reduced movements, masked facies, shuffling gait), Postural instability (falls, late feature). Non-motor features: anosmia, constipation, depression, sleep disorders, autonomic dysfunction."},
+
+  {topic:"CNS Disorders", type:"SAQ",
+   q:"Explain the process of demyelination in multiple sclerosis and list four clinical manifestations.",
+   opts:null, ans:null,
+   explain:"Demyelination: An unknown trigger (possibly viral/toxin/UV) activates autoreactive T lymphocytes that cross the blood-brain barrier → attack oligodendrocytes → myelin destruction in CNS white matter → disruption of saltatory conduction (action potential propagation from node to node) → slowed or blocked neural transmission. Inflammatory plaques form at lesion sites. Early demyelination may be partially reversed (relapse-remission), but repeated damage leads to axonal injury and permanent deficit. Clinical manifestations: (1) Muscle weakness and spasticity, (2) Visual disturbances (optic neuritis — painful vision loss), (3) Bladder/bowel dysfunction (urinary urgency, incontinence), (4) Fatigue, numbness, and sensory changes. Also: speech difficulty, depression, cognitive changes."},
+
+  {topic:"Cardiovascular System", type:"SAQ",
+   q:"Define cardiogenic shock. List four clinical manifestations and name two drug classes used in management.",
+   opts:null, ans:null,
+   explain:"Definition: Cardiogenic shock is a life-threatening condition where the heart cannot pump sufficient blood to meet the body's metabolic needs, resulting in end-organ hypoperfusion. It occurs when ~40% of myocardium is irreversibly damaged (most commonly from MI). Clinical manifestations: (1) Severe hypotension (systolic <90 mmHg), (2) Oliguria/anuria (↓renal perfusion), (3) Pale, cold, clammy skin (peripheral vasoconstriction), (4) Pulmonary oedema and frothy sputum (elevated pulmonary venous pressure), (5) Confusion/agitation (↓cerebral perfusion). Drug classes: (1) Inotropes — dobutamine (beta-1/2 agonist → ↑contractility and CO); milrinone (↑contractility, ↓filling pressure). (2) Diuretics — furosemide (reduce pulmonary/peripheral oedema). Analgesics for pain; vasopressors if profound hypotension."},
+
+  {topic:"Cardiovascular System", type:"SAQ",
+   q:"Explain the pathophysiology of atherosclerosis step by step, and name four risk factors.",
+   opts:null, ans:null,
+   explain:"Step 1: Endothelial injury (from hypertension, smoking, hyperglycaemia) → increased permeability. Step 2: LDL penetrates the subendothelial intima → oxidised by free radicals. Step 3: Monocytes migrate into the intima → differentiate into macrophages → engulf ox-LDL → foam cells accumulate → fatty streaks (earliest visible lesion). Step 4: Foam cells die → necrotic core forms; smooth muscle cells migrate from media → proliferate under PDGF. Step 5: Fibrous cap forms over the necrotic core. Step 6: Plaque calcification; unstable plaques rupture → platelet aggregation → acute thrombus → MI or stroke. Risk factors: (1) Hypercholesterolaemia (high LDL, low HDL), (2) Hypertension — directly damages endothelium, (3) Smoking — promotes oxidative stress and endothelial dysfunction, (4) Diabetes mellitus — advanced glycation damages vessels. Others: obesity, family history, sedentary lifestyle, high CRP."},
+
+  {topic:"Renal System", type:"SAQ",
+   q:"Compare cystitis and pyelonephritis across location, symptoms, typical organisms, and treatment.",
+   opts:null, ans:null,
+   explain:"Cystitis (lower UTI): Bladder inflammation. Symptoms: dysuria, urinary frequency/urgency, suprapubic pain, cloudy foul urine, possible haematuria — usually no systemic features. Organisms: E. coli (most common), Proteus mirabilis. Treatment: Nitrofurantoin or fosfomycin (empiric, low MDR risk); analgesics, urinary alkalizers, high fluid intake. Pyelonephritis (upper UTI): Infection of renal pelvis and nephrons. Symptoms: all of cystitis PLUS systemic features — high fever, chills, flank/groin pain, costovertebral angle tenderness, nausea, vomiting, haematuria. Organisms: E. coli, Proteus mirabilis, Pseudomonas. Treatment: ciprofloxacin/levofloxacin (low MDR risk); IV ceftriaxone or ertapenem (high risk/septic); analgesics, antipyretics, antiemetics, IV fluids."},
+
+  {topic:"Renal System", type:"SAQ",
+   q:"Describe the pathological mechanism of chronic pyelonephritis and its potential end-stage complication.",
+   opts:null, ans:null,
+   explain:"Chronic pyelonephritis results from persistent or repeated bacterial infection of the renal pelvis and nephrons — often in the context of structural abnormalities (vesicoureteral reflux, obstruction, kidney stones, or BPH). Each episode triggers an inflammatory response, causing: neutrophil and macrophage infiltration → tissue oedema and abscess formation → papillary necrosis → progressive fibrosis and scarring. Over time, scarring replaces functional nephrons irreversibly. Remaining nephrons undergo compensatory hyperfiltration → further injury. The condition is often asymptomatic until significant nephron loss has occurred. End-stage complication: Chronic renal failure (end-stage renal disease) requiring dialysis or transplantation. Other complications: hypertension (from RAAS activation in scarred kidneys), sepsis if acutely infected."},
+
+  {topic:"Respiratory System", type:"SAQ",
+   q:"Explain the four pathophysiological mechanisms of diarrhoea with examples.",
+   opts:null, ans:null,
+   explain:"(1) Osmotic diarrhoea: osmotically active substances draw water into the intestinal lumen → watery stool. Resolves with fasting. Causes: rotavirus, norovirus, lactose intolerance, osmotic laxatives. (2) Secretory diarrhoea: ↓water and salt absorption, ↑chloride secretion → large volume watery stool. Does NOT resolve with fasting. Causes: E. coli enterotoxin, Vibrio cholerae (cholera toxin), rotavirus. (3) Exudative/Inflammatory diarrhoea: disruption of intestinal epithelial integrity → bloody/mucous stool (dysentery). Causes: E. coli, Shigella, Salmonella, Giardia, IBD. (4) Motility disturbance: altered GI transit — too fast (decreased absorption) or too slow (bacterial overgrowth). Causes: IBS, post-surgical, thyrotoxicosis, medications."},
+
+  {topic:"Respiratory System", type:"SAQ",
+   q:"List five clinical features of pneumonia and name two severity assessment tools used in Australia.",
+   opts:null, ans:null,
+   explain:"Clinical features of pneumonia: (1) Productive cough (sputum colour varies by pathogen — rusty = S. pneumoniae), (2) Pyrexia (fever) and chills, (3) Dyspnoea and tachypnoea (hypoxaemia), (4) Pleuritic chest pain (worse on inspiration), (5) Reduced lung expansion and dullness to percussion on the affected side. Also: tachycardia, fatigue, dehydration, hypoxaemia. Severity assessment tools (Australia/NZ): (1) CORB score: Confusion, Oxygenation, Respiratory rate, Blood pressure — predicts 30-day mortality. (2) PSI (Pneumonia Severity Index): comprehensive scoring; assigns patients to risk classes I–V. (3) SMART-COP: identifies need for ICU-level care. The exam notes specifically mention CORB and PSI."},
+
+  {topic:"Gastrointestinal System", type:"SAQ",
+   q:"Describe the mechanism by which H. pylori causes peptic ulcer disease.",
+   opts:null, ans:null,
+   explain:"H. pylori survives gastric acid by secreting urease → converts urea to ammonium → creates an alkaline microenvironment around the bacterium. Pathogenic mechanisms: (1) Reduces mucous layer thickness → exposes mucosa to acid/pepsin, (2) Induces gastrin release from G cells → ↑HCl secretion, (3) Inhibits somatostatin (which normally suppresses acid) → unopposed acid production, (4) Promotes pro-inflammatory cytokines (IL-1β, TNF-α, IL-8) → mucosal inflammation and damage, (5) CagA and VacA virulence factors directly disrupt epithelial cell integrity and immune responses. Result: mucosal erosion >5mm deep exposing smooth muscle and blood vessels → peptic ulcer. H. pylori present in ~80% of gastric ulcers, ~95% of duodenal ulcers."},
+
+  {topic:"Gastrointestinal System", type:"SAQ",
+   q:"Describe the immunological mechanism of coeliac disease and list four symptoms.",
+   opts:null, ans:null,
+   explain:"Mechanism: Gluten (found in wheat, rye, barley) is incompletely digested → forms immunoreactive fragment gliadin → gliadin crosses intestinal mucosa and cross-links with tissue transglutaminase (tTG) → the gliadin-tTG complex is presented by HLA-DQ2/DQ8 molecules to CD4+ T cells → T-cell activation → production of anti-tTG IgA antibodies → inflammatory response in lamina propria → villous atrophy and crypt hyperplasia → malabsorption. Symptoms: (1) Chronic diarrhoea and steatorrhoea (fat malabsorption), (2) Weight loss and failure to thrive, (3) Abdominal pain and distension, (4) Anaemia (iron and folate malabsorption), (5) Electrolyte imbalances, mouth ulcers, dermatitis herpetiformis."},
+
+  {topic:"Endocrine System", type:"SAQ",
+   q:"Compare Graves' disease and Hashimoto's disease in terms of mechanism, thyroid hormone levels, and treatment.",
+   opts:null, ans:null,
+   explain:"Graves' disease (hyperthyroidism): Autoantibodies (TSI) bind and activate TSH receptors → follicular cells overproduce T3/T4 → ↑T3/T4, ↓TSH. Specific features: exophthalmos (autoantibody-mediated orbital inflammation), goitre. Treatment: antithyroid drugs (propylthiouracil, carbimazole), radioactive iodine (I-131), surgery. Hashimoto's disease (hypothyroidism): Autoantibodies against thyroid peroxidase and thyroglobulin → T-cell infiltration and fibrosis → gland destruction → ↓T3/T4, ↑TSH. Features: goitre, non-pitting oedema (myxoedema if severe), cold intolerance, weight gain, bradycardia, constipation. Treatment: levothyroxine replacement (start low, titrate). Both are autoimmune; Hashimoto's is the most common cause of hypothyroidism; Graves' is the most common cause of hyperthyroidism."},
+
+  {topic:"Endocrine System", type:"SAQ",
+   q:"Explain the pathophysiology of diabetic ketoacidosis (DKA) in Type 1 diabetes.",
+   opts:null, ans:null,
+   explain:"DKA occurs due to absolute insulin deficiency in T1D. Without insulin: (1) Glucose cannot enter cells → hyperglycaemia → osmotic diuresis → dehydration and electrolyte loss. (2) Cells perceive starvation → counter-regulatory hormones ↑ (glucagon, adrenaline, cortisol) → ↑gluconeogenesis → worsens hyperglycaemia. (3) Unrestrained lipolysis → free fatty acids (FFAs) released from adipose → liver converts FFAs to ketone bodies (acetoacetate, beta-hydroxybutyrate, acetone) → metabolic acidosis (ketonaemia). (4) Acetone exhaled as fruity/acetone breath. Clinical features: polydipsia, polyuria, nausea, vomiting, abdominal pain, Kussmaul breathing (deep, rapid — compensatory for acidosis), confusion, coma. Management: IV fluid resuscitation, IV insulin infusion (not subcut — too slow), potassium replacement (insulin drives K+ into cells), sodium bicarbonate (only for severe acidosis), treat precipitant."},
+
+  {topic:"Musculoskeletal System", type:"SAQ",
+   q:"Describe the pathophysiology of osteoarthritis step by step, from chondrocyte dysfunction to bone exposure.",
+   opts:null, ans:null,
+   explain:"Step 1: Chondrocyte dysfunction — normally terminally differentiated, but in OA, chondrocytes begin dividing abnormally, forming metabolically active clusters. Step 2: Matrix degradation — pro-inflammatory cytokines (IL-1, TNF-α) induce matrix metalloproteinases (MMPs) → degrade type II collagen and aggrecan (structural proteins of cartilage). Step 3: Cartilage vulnerability — ↓aggrecan reduces cartilage's ability to withstand compressive forces. Step 4: Fibrillation — fissures develop in cartilage surface → vertical clefts → chondrocyte death → ↓cartilage thickness. Step 5: Bone exposure — progressive cartilage loss exposes subchondral bone → eburnation (dense, ivory-like bone surface). Step 6: Crystal deposition — calcium pyrophosphate and basic calcium phosphate crystals deposit in abnormal cartilage → further inflammation. Osteophyte formation at joint margins; subchondral cysts form from synovial fluid forced into the bone."},
+
+  {topic:"Reproductive System", type:"SAQ",
+   q:"Describe the pathophysiology of PCOS and list four clinical features.",
+   opts:null, ans:null,
+   explain:"Pathophysiology: The central mechanism is insulin resistance → compensatory hyperinsulinaemia. Elevated insulin: (1) Reduces hepatic SHBG (sex hormone-binding globulin) production → ↑free androgens. (2) Directly stimulates ovarian androgen production. Elevated androgens suppress the normal LH:FSH ratio → follicles fail to mature and ovulate → accumulate as cysts in the ovary. HPO axis dysregulation: ↑LH, relatively ↓FSH → tonic anovulation. Environmental toxins (pesticides, plastics) also implicated via endocrine disruption. Clinical features: (1) Hirsutism — male-pattern facial/body hair from androgen excess, (2) Amenorrhoea or oligomenorrhoea — irregular/absent periods from anovulation, (3) Acne and oily skin — androgen-driven sebaceous gland overactivity, (4) Obesity — worsens insulin resistance in a vicious cycle. Also: infertility, mood disorders, polycystic ovaries on ultrasound."},
+
+  {topic:"Reproductive System", type:"SAQ",
+   q:"Compare prostate cancer and BPH in terms of pathophysiology, location, and management.",
+   opts:null, ans:null,
+   explain:"BPH (Benign Prostatic Hyperplasia): Mechanism: Testosterone → 5α-DHT (via 5α-reductase, ↑with age) → drives nodular hyperplasia of periurethral zone → compresses urethra → obstructive urinary symptoms. Not malignant. Symptoms: reduced flow, nocturia, urgency, retention. Management: Alpha-blockers (terazosin — relax smooth muscle rapidly), 5α-reductase inhibitors (finasteride — shrink prostate long-term), PDE5 inhibitors, TURP surgery. Prostate Cancer (Adenocarcinoma): Mechanism: Androgen-dependent malignancy from glandular epithelium; 5α-DHT drives cancerous proliferation. Over time becomes hormone-refractory (androgen receptor mutations allow activation without androgen). Usually arises in peripheral zone (vs BPH in periurethral zone). Often asymptomatic until advanced — metastasises to bone (~90%). Diagnosis: DRE, PSA, TRUS biopsy. Management: Radical prostatectomy, radiotherapy, androgen deprivation therapy (LHRH agonists, anti-androgens), chemotherapy for advanced disease."},
+
+  {topic:"Inflammation & Healing", type:"SAQ",
+   q:"Describe leukaemia: pathophysiology, clinical features, and treatment strategies.",
+   opts:null, ans:null,
+   explain:"Pathophysiology: Clonal malignant proliferation of abnormal white blood cells (immature blasts in acute; mature cells in chronic) in bone marrow → crowd out normal haematopoiesis → anaemia (↓RBCs), neutropenia (↓normal WBCs → infection), thrombocytopenia (↓platelets → bleeding). Abnormal cells may infiltrate liver, spleen, lymph nodes, CNS. Types: Acute lymphoblastic (ALL), Acute myeloid (AML), Chronic myeloid (CML), Chronic lymphocytic (CLL). Clinical features: Fatigue and pallor (anaemia), frequent infections (neutropenia), bruising/petechiae/bleeding (thrombocytopenia), bone pain (marrow expansion), lymphadenopathy, hepatosplenomegaly, weight loss. Treatment: (1) Combination chemotherapy — induction → consolidation → maintenance. (2) Targeted therapy — tyrosine kinase inhibitors (imatinib for CML), monoclonal antibodies (rituximab for CLL). (3) Stem cell transplantation — curative for eligible patients. (4) Supportive care — transfusions, antibiotics, antifungals, tumour lysis monitoring."},
+
+  // === NEW LAQs ===
+
+  {topic:"Cardiovascular System", type:"LAQ",
+   q:"Describe the pathophysiology of heart failure including neurohormonal compensation, left vs right-sided differences, classification by ejection fraction, and guideline-directed medical therapy (GDMT).",
+   opts:null, ans:null,
+   explain:"Pathophysiology: Heart failure (HF) is a syndrome where the heart cannot meet metabolic demands or handle venous return without elevated filling pressures. Core mechanisms: (A) Systolic dysfunction (HFrEF ≤40%): ↓contractility → ↓stroke volume → ↓CO. (B) Diastolic dysfunction (HFpEF ≥50%): stiff ventricle → impaired filling → ↑filling pressures. Neurohormonal compensation: ↓CO activates SNS (↑HR, vasoconstriction) and RAAS (Na/H2O retention, aldosterone, ADH). Initially adaptive but chronically maladaptive → ↑afterload/preload → pathological remodelling (eccentric hypertrophy/dilation in HFrEF; concentric in HFpEF) → apoptosis, fibrosis, progressive dysfunction. Left HF: LV fails → blood backs into pulmonary veins → pulmonary oedema → dyspnoea, orthopnoea, PND, frothy pink sputum, crackles, fatigue. Right HF: RV fails → systemic venous congestion → peripheral oedema, hepatomegaly, JVD, ascites, GI congestion (nausea, anorexia). Progression: Left HF → pulmonary HTN → right HF (biventricular common long-term). Classification: HFrEF (≤40%), HFmrEF (41–49%), HFpEF (≥50%); NYHA Class I–IV by symptom severity. GDMT for HFrEF (quadruple therapy): (1) ACEi/ARB/ARNI (sacubitril/valsartan) — ↓preload/afterload, ↓remodelling; (2) Beta-blockers (carvedilol, bisoprolol) — ↓HR, ↓oxygen demand, ↑EF; (3) MRA (spironolactone) — ↓fibrosis, ↓aldosterone; (4) SGLT2i (dapagliflozin) — ↓HF hospitalisations. Diuretics (furosemide) for symptom relief. Devices: ICD (sudden death prevention), CRT (dyssynchrony)."},
+
+  {topic:"Renal System", type:"LAQ",
+   q:"Explain the pathophysiology of chronic kidney disease (CKD) including the maladaptive hyperfiltration cycle, systemic consequences, and comprehensive treatment strategies.",
+   opts:null, ans:null,
+   explain:"Pathophysiology of CKD: CKD is progressive, irreversible nephron loss from ongoing injury. Common causes: diabetic nephropathy (leading cause), hypertensive nephrosclerosis, glomerulonephritis, chronic pyelonephritis. Maladaptive hyperfiltration cycle: Initial nephron loss → surviving nephrons undergo compensatory hypertrophy and hyperfiltration → intraglomerular hypertension and proteinuria → podocyte injury → TGF-β-driven interstitial fibrosis and tubular atrophy (hallmark histological finding) → further nephron loss → vicious cycle of progression. Systemic consequences as GFR declines: (1) Uraemia (GFR <30): accumulation of nitrogenous wastes → nausea, fatigue, encephalopathy. (2) Fluid overload → hypertension, pulmonary oedema. (3) Metabolic acidosis: ↓H+ excretion. (4) Hyperkalaemia: ↓K+ excretion → arrhythmia risk. (5) Renal anaemia: ↓erythropoietin → normocytic anaemia. (6) Renal osteodystrophy: ↓Vit D activation → ↓Ca2+ → ↑PTH (secondary hyperparathyroidism) → bone resorption → fracture risk. Stages: G1 (GFR ≥90, kidney damage) → G5 (GFR <15, ESRD). Treatment: (A) Slow progression: RAAS inhibition (ACEi/ARB) — reduce intraglomerular HTN and proteinuria; glycaemic control; BP targets; SGLT2 inhibitors (shown to reduce CKD progression). (B) Manage consequences: Diuretics (fluid overload); sodium bicarbonate (acidosis); dietary K+ restriction + potassium binders (hyperkalaemia); ESA + IV iron (anaemia); phosphate binders + Vit D analogue (bone disease); statins (CVD risk). (C) Renal replacement therapy (ESRD): haemodialysis (3×/week), peritoneal dialysis (home-based), or renal transplantation (curative)."},
+
+  {topic:"Respiratory System", type:"LAQ",
+   q:"Describe the pathophysiology, clinical features, diagnosis, and management of COPD — including the differences between chronic bronchitis and emphysema.",
+   opts:null, ans:null,
+   explain:"COPD overview: Chronic Obstructive Pulmonary Disease is a progressive, largely irreversible condition caused primarily by cigarette smoking (or air pollutants), encompassing two overlapping conditions: chronic bronchitis and emphysema. Both cause obstructive physiology (FEV1/FVC <70%). Pathophysiology of Chronic Bronchitis: Tobacco smoke → chronic airway inflammation → hypertrophy and hyperplasia of mucus glands and goblet cells → mucus hypersecretion → damaged cilia cannot clear mucus → mucus plugging → airway obstruction and recurrent infection. Pathophysiology of Emphysema: Tobacco smoke → neutrophil/macrophage recruitment → release of proteases (elastase, MMPs) → destruction of alveolar walls and elastic fibres → permanent alveolar enlargement (air trapping) → ↓elastic recoil → expiratory airflow limitation → hyperinflation (barrel chest) → ↓gas exchange surface area → hypoxaemia and hypercapnia. Shared pathway: inflammation → cytokine release → either mucus hypersecretion (bronchitis) or elastic tissue destruction (emphysema) → cor pulmonale (right heart failure from chronic hypoxia → pulmonary vasoconstriction → pulmonary HTN → RV hypertrophy). Clinical features: Progressive dyspnoea (worse on exertion), chronic productive cough (especially in chronic bronchitis), barrel chest, pursed-lip breathing, use of accessory muscles, digital clubbing, cyanosis, weight loss. Diagnosis: History of significant smoking exposure; spirometry (FEV1/FVC <70%); post-bronchodilator spirometry for severity staging (GOLD grades 1–4); chest X-ray (hyperinflation, flattened diaphragm); ABG (hypoxaemia, hypercapnia). Management: (1) Smoking cessation (most important — only intervention proven to slow decline). (2) Bronchodilators: SABA/SAMA (symptom relief), LABA/LAMA (maintenance). (3) Inhaled corticosteroids (reduce exacerbations in selected patients). (4) Pulmonary rehabilitation — improves exercise tolerance, quality of life. (5) Long-term oxygen therapy (LTOT) for PaO2 <55 mmHg — reduces cor pulmonale mortality. (6) Influenza and pneumococcal vaccination. (7) Nutritional support (weight loss worsens prognosis)."},
+
+  {topic:"CNS Disorders", type:"LAQ",
+   q:"Describe the pathophysiology of ischaemic stroke and haemorrhagic stroke — including risk factors, clinical manifestations by hemisphere, diagnostic evaluation, and acute management of each.",
+   opts:null, ans:null,
+   explain:"Ischaemic Stroke (~80%): Pathophysiology: Atherosclerotic plaque rupture in a cerebral artery → platelet aggregation → thrombus (thrombotic stroke); OR embolus from heart/carotid travels to a cerebral artery (embolic stroke) → arterial occlusion → loss of oxygen and glucose delivery → neuronal ATP depletion within minutes → cytotoxic oedema → infarction. An ischaemic penumbra (zone of reversible injury) surrounds the core — the therapeutic target. Haemorrhagic Stroke (~20%): Pathophysiology: Hypertension, aneurysm, or AVM causes cerebral vessel rupture → blood accumulates in brain tissue (intracerebral) or subarachnoid space → direct compression, mass effect, raised ICP → ischaemia and herniation risk. Thunderclap headache = classic subarachnoid sign. Risk Factors (modifiable): Hypertension (most important), smoking, atrial fibrillation (embolic), diabetes, dyslipidaemia, obesity, alcohol. Non-modifiable: Age, sex (males), family history, prior TIA. Clinical Manifestations by Hemisphere: Left hemisphere: right-sided hemiplegia/hemiparesis, expressive or receptive aphasia, right visual field deficit, frustration/depression. Right hemisphere: left-sided hemiplegia, left visual field neglect, poor judgement, impulsivity, apparent unconcern. General (both): FAST — Facial drooping, Arm weakness, Speech difficulty, Time to call. Diagnostic Evaluation: (1) CT head — immediate, essential to exclude haemorrhage before any thrombolysis. (2) NIH Stroke Scale — standardised severity assessment. (3) MRI/MRA — detailed tissue/vessel imaging, identifies penumbra. (4) Bloods — FBC, coags, glucose, lipids, troponin. (5) Carotid duplex — identifies stenosis as embolic source. (6) ECG — detects AF as embolic cause. Acute Management: Ischaemic: IV tPA (alteplase) within 4.5 hours (door-to-needle time is critical); mechanical thrombectomy (large vessel occlusion) up to 24 hours; aspirin 300mg; anticoagulation if AF-related. Haemorrhagic: Reverse any anticoagulation; surgical clot evacuation or aneurysm clipping; endovascular coiling; control BP and ICP (osmotic diuretics); avoid thrombolytics — absolutely contraindicated. Supportive care both: airway protection, glycaemic control (hyperglycaemia worsens outcome), fever management, DVT prophylaxis, early rehabilitation."},
+
+  {topic:"Gastrointestinal System", type:"LAQ",
+   q:"Describe the pathophysiology of liver cirrhosis — including the steps from injury to nodule formation, the major complications, and their mechanisms.",
+   opts:null, ans:null,
+   explain:"Definition: Cirrhosis is the end-stage of chronic liver disease, characterised by widespread hepatic fibrosis with replacement of normal architecture by regenerative nodules. Pathophysiology — Step-by-step: (1) Repeated hepatocyte injury (from alcohol, viral hepatitis B/C, NASH, autoimmune hepatitis, biliary disease, haemochromatosis, Wilson's disease). (2) Hepatocyte death → inflammatory response → Kupffer cell and stellate cell activation. (3) Hepatic stellate cells (normally quiescent) are activated by TGF-β, PDGF → transform into myofibroblasts → produce excess collagen (types I and III) → fibrosis of sinusoids. (4) Progressive fibrosis disrupts: hepatocyte organisation (function), sinusoidal blood flow (→ portal hypertension), and bile canaliculi (→ cholestasis). (5) Hepatocytes attempt regeneration but produce only disorganised regenerative nodules — which further distort architecture and increase portal resistance. Note: >75% of liver must be damaged before major symptoms appear. Major complications and mechanisms: Portal Hypertension: Fibrosis and nodules obstruct portal blood flow → elevated portal pressure → (a) Oesophageal and gastric varices — rupture → life-threatening haematemesis; (b) Splenomegaly and hypersplenism → thrombocytopenia; (c) Caput medusae (dilated superficial abdominal veins). Ascites: Portal HTN + ↓albumin (↓oncotic pressure) + RAAS activation → Na/H2O retention → fluid accumulates in peritoneum. Risk of spontaneous bacterial peritonitis. Hepatic Encephalopathy: ↓liver function → ammonia and other toxins not metabolised → accumulate in blood → cross blood-brain barrier → altered consciousness, asterixis, coma. Coagulopathy: Liver synthesises all clotting factors (except VIII) → ↓clotting factors → easy bruising, prolonged bleeding, GI haemorrhage risk. Hepatocellular Carcinoma: High mitotic rate in regenerating hepatocytes → risk of oncogene activation and DNA errors → HCC (AFP elevated). Renal failure (Hepatorenal syndrome): Profound renal vasoconstriction in cirrhosis → ↓GFR → oliguria → acute renal failure."}
+];
+
+const TOPICS_ALL = ["All", ...new Set(QUESTIONS.map(q => q.topic))];
+let filtered = [...QUESTIONS];
+let idx = 0;
+let revealed = false;
+let correct = 0, attempted = 0;
+let activeTopic = "All";
+let activeType  = "All";
+
+function applyFilters() {
+  filtered = QUESTIONS.filter(q =>
+    (activeTopic === "All" || q.topic === activeTopic) &&
+    (activeType  === "All" || q.type  === activeType)
+  );
+  if (!filtered.length) filtered = [...QUESTIONS];
+  idx = 0; correct = 0; attempted = 0;
+}
+
+function init() {
+  const nav = document.getElementById("topicNav");
+  nav.innerHTML = TOPICS_ALL.map(t =>
+    `<button class="topic-btn${t==="All"?" active":""}" onclick="setTopic('${t.replace(/'/g,"\'")}')">${t}</button>`
+  ).join("");
+  ["MCQ","SAQ","LAQ"].forEach(type => {
+    const n = QUESTIONS.filter(q => q.type === type).length;
+    const btn = document.getElementById("type" + type);
+    if (btn) btn.textContent = type + " · " + n;
+  });
+  render();
+}
+
+function setTopic(t) {
+  activeTopic = t;
+  document.querySelectorAll(".topic-btn").forEach(b => b.classList.toggle("active", b.textContent === t));
+  applyFilters();
+  render();
+}
+
+function setType(t) {
+  activeType = t;
+  ["All","MCQ","SAQ","LAQ"].forEach(x => {
+    const btn = document.getElementById("type" + x);
+    if (btn) btn.classList.toggle("active", x === t);
+  });
+  applyFilters();
+  render();
+}
+
+function render() {
+  const q = filtered[idx];
+  document.getElementById("qNum").textContent = `Question ${idx+1} of ${filtered.length}`;
+  document.getElementById("qType").className = `q-type type-${q.type}`;
+  document.getElementById("qType").textContent = q.type;
+  document.getElementById("qTopic").textContent = q.topic;
+  document.getElementById("qText").textContent = q.q;
+  document.getElementById("progFill").style.width = `${Math.round(((idx+1)/filtered.length)*100)}%`;
+
+  const ab = document.getElementById("answerBox");
+  ab.innerHTML = `<strong>Model answer</strong>${q.explain}`;
+  ab.className = "answer-box";
+  revealed = false;
+
+  const optsDiv = document.getElementById("opts");
+  if (q.opts) {
+    optsDiv.innerHTML = q.opts.map((o,i) =>
+      `<button class="opt" onclick="checkOpt(${i})">${String.fromCharCode(65+i)}. ${o}</button>`
+    ).join("");
+    document.getElementById("revealBtn").style.display = "none";
+    document.getElementById("hint").textContent = "Select the best answer.";
+  } else {
+    optsDiv.innerHTML = "";
+    document.getElementById("revealBtn").style.display = "inline-block";
+    document.getElementById("hint").textContent = q.type === "LAQ" ? "Draft your full essay answer before revealing." : "Try to recall key points before revealing the model answer.";
+  }
+  updateScore();
+}
+
+function checkOpt(i) {
+  if (revealed) return;
+  revealed = true;
+  attempted++;
+  const q = filtered[idx];
+  const buttons = document.querySelectorAll(".opt");
+  buttons.forEach((b, j) => {
+    b.disabled = true;
+    if (j === q.ans) b.classList.add("correct");
+    else if (j === i) b.classList.add("wrong");
+  });
+  if (i === q.ans) correct++;
+  document.getElementById("answerBox").classList.add("show");
+  updateScore();
+}
+
+function reveal() {
+  if (revealed) return;
+  revealed = true;
+  document.getElementById("answerBox").classList.add("show");
+}
+
+function next() {
+  idx = (idx + 1) % filtered.length;
+  render();
+}
+
+function shuffle() {
+  for (let i = filtered.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
+  }
+  idx = 0; correct = 0; attempted = 0;
+  render();
+}
+
+function resetStats() {
+  correct = 0; attempted = 0;
+  updateScore();
+}
+
+function updateScore() {
+  const sb = document.getElementById("scoreBar");
+  if (attempted === 0) { sb.innerHTML = `<span class="score-pill">Attempt an MCQ to track your score</span>`; return; }
+  const pct = Math.round((correct/attempted)*100);
+  sb.innerHTML = `<span class="score-pill">MCQ score: <span>${correct}/${attempted}</span></span><span class="score-pill">Accuracy: <span>${pct}%</span></span>`;
+}
+
+init();
+</script>
+</body>
+</html>
